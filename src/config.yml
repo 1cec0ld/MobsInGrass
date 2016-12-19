@@ -1,0 +1,12 @@
+version: 5.1
+settings:
+  global:
+    attract:
+      itemtype: GLOWSTONE_DUST
+      amount: 10
+      duration: 15
+    repel:
+      itemtype: REDSTONE
+      amount: 10
+      duration: 15
+      
