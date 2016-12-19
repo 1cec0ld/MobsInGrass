@@ -1,6 +1,5 @@
 package com.gmail.ak1cec0ld.plugins.MobsInGrass;
 
-import java.util.HashMap;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -10,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -39,7 +39,7 @@ public class PlayerListener implements Listener{
     
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent playerMoveEvent){
-        if (plugin.disabled){
+        if (plugin.isDisabled()){
             return;
         }
         Location from = playerMoveEvent.getFrom();
@@ -48,14 +48,14 @@ public class PlayerListener implements Listener{
             return;
         }
         Material toBlock = to.getBlock().getType();
+        if (!plugin.configManager.isConfiguredMaterial(toBlock.toString())){
+            return;
+        }
         Player player = playerMoveEvent.getPlayer();
         int rando = r.nextInt(100)+1;
         if (plugin.configManager.getPlayerChance(player,toBlock.toString()) < rando){
             return;
         }
-        createRandomEntity(player,toBlock);
-    }
-    public void createRandomEntity(Player player, Material toBlock){
         String regionName = "default";
         Set<String> myRegions = plugin.configManager.getRegionNames(toBlock.toString());
         ApplicableRegionSet playerRegions = plugin.WorldGuard.getRegionManager(player.getWorld()).getApplicableRegions(player.getLocation());
@@ -66,65 +66,43 @@ public class PlayerListener implements Listener{
                 }
             }
         }
-        Set<String> myMobs = plugin.configManager.getMobs(toBlock.toString(), regionName);
-        if (myMobs == null){
+        ConfigurationSection randomEntity = plugin.configManager.getRandomEntity(toBlock.toString(), regionName);
+        if (randomEntity == null){
             return;
+        } else {
+            spawnEntity(player, randomEntity);
         }
-        HashMap<String,Integer> mobWeights = new HashMap<String,Integer>();
-        int weightSum = 0;
-        for (String o : myMobs){
-            weightSum += plugin.configManager.getMobWeight(toBlock.toString(), regionName, o);
-            mobWeights.put(o, plugin.configManager.getMobWeight(toBlock.toString(), regionName, o));
-        }
-        int iterator = 0;
-        int randomIndex = r.nextInt(weightSum);
-        boolean chosen = false;
-        String choice = null;
-        for (String o : myMobs) {
-            iterator += mobWeights.get(o);
-            if (!chosen && iterator >= randomIndex){
-                chosen = true;
-                choice = o;
-            }
-        }
-        EntityType myEntity = EntityType.ZOMBIE;
-        boolean validType = false;
-        for (EntityType c : EntityType.values()){
-            if (!validType && c.name().equals(choice)){
-                myEntity = EntityType.valueOf(choice);
-                validType = true;
-            }
-        }
-        if (!validType){
-            plugin.getServer().getConsoleSender().sendMessage("[MIG] ERROR! INVALID ENTITY TYPE IN CONFIG: "+choice);
-        }
+    }
+    public void spawnEntity(Player player, ConfigurationSection entitySection){
+        EntityType myEntity = null;
+        myEntity = EntityType.valueOf(entitySection.getName().toUpperCase());
         LivingEntity spawned = (LivingEntity) player.getWorld().spawnEntity(player.getLocation(), myEntity);
         player.sendMessage(ChatColor.DARK_RED + "A WILD " + myEntity.name().replace('_', ' ') + " HAS APPEARED");
-        if (plugin.configManager.hasAttributes(toBlock.toString(), regionName, myEntity.name())){
-            if (plugin.configManager.getAttributeChance(toBlock.toString(), regionName, myEntity.name(), "damage") > r.nextInt(100)){
+        if (entitySection.contains("attributes")){
+            if (entitySection.getDouble("attributes.damage.chance", 0.0) > r.nextDouble()*100){
                 AttributeInstance a = spawned.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
-                a.setBaseValue(plugin.configManager.getAttributeValue(toBlock.toString(), regionName, myEntity.name(), "damage"));
+                a.setBaseValue(entitySection.getInt("attributes.damage.value", 2));
             }
-            if (plugin.configManager.getAttributeChance(toBlock.toString(), regionName, myEntity.name(), "armor") > r.nextInt(100)){
+            if (entitySection.getDouble("attributes.armor.chance", 0.0) > r.nextDouble()*100){
                 AttributeInstance a = spawned.getAttribute(Attribute.GENERIC_ARMOR);
-                a.setBaseValue(plugin.configManager.getAttributeValue(toBlock.toString(), regionName, myEntity.name(), "armor"));
+                a.setBaseValue(entitySection.getInt("attributes.armor.value", 0));
             }
-            if (plugin.configManager.getAttributeChance(toBlock.toString(), regionName, myEntity.name(), "knockbackresistance") > r.nextInt(100)){
+            if (entitySection.getDouble("attributes.knockbackresistance.chance", 0.0) > r.nextDouble()*100){
                 AttributeInstance a = spawned.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
-                a.setBaseValue(plugin.configManager.getAttributeValue(toBlock.toString(), regionName, myEntity.name(), "knockbackresistance"));
+                a.setBaseValue(entitySection.getInt("attributes.knockbackresistance.value", 0));
             }
-            if (plugin.configManager.getAttributeChance(toBlock.toString(), regionName, myEntity.name(), "health") > r.nextInt(100)){
+            if (entitySection.getDouble("attributes.health.chance", 0.0) > r.nextDouble()*100){
                 AttributeInstance a = spawned.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-                a.setBaseValue(plugin.configManager.getAttributeValue(toBlock.toString(), regionName, myEntity.name(), "health"));
+                a.setBaseValue(entitySection.getInt("attributes.health.value", 20));
             }
-            if (plugin.configManager.getAttributeChance(toBlock.toString(), regionName, myEntity.name(), "movespeed") > r.nextInt(100)){
+            if (entitySection.getDouble("attributes.movespeed.chance", 0.0) > r.nextDouble()*100){
                 AttributeInstance a = spawned.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
-                a.setBaseValue(plugin.configManager.getAttributeValue(toBlock.toString(), regionName, myEntity.name(), "movespeed"));
+                a.setBaseValue(entitySection.getInt("attributes.movespeed.value", 1));
             }
             if (spawned instanceof Zombie){
-                if (plugin.configManager.getAttributeChance(toBlock.toString(), regionName, myEntity.name(), "zombiereinforcement") > r.nextInt(100)){
+                if (entitySection.getDouble("attributes.zombiereinforcement.chance", 0.0) > r.nextDouble()*100){
                     AttributeInstance a = spawned.getAttribute(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS);
-                    a.setBaseValue(plugin.configManager.getAttributeValue(toBlock.toString(), regionName, myEntity.name(), "zombiereinforcement"));
+                    a.setBaseValue(entitySection.getInt("attributes.zombiereinforcement.value", 0));
                 }
             }
             
