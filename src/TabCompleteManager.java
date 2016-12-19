@@ -35,7 +35,8 @@ public class TabCompleteManager implements TabCompleter{
                         }
                     }
                     for (Material v : Material.values()){
-                        for (String stri : plugin.configManager.getMobsForThisMaterial(v.name())){
+                        //plugin.getServer().broadcastMessage("0 "+v.toString());
+                        for (String stri : plugin.configManager.getMobsForThisMaterial(v.toString())){
                             if (!suggestions.contains(stri) && !stri.contains("can spawn")){
                                 suggestions.add(stri);
                             }
