@@ -12,7 +12,7 @@ public class MobsInGrass extends JavaPlugin{
     public ConfigManager configManager;
     public TaskManager taskManager = new TaskManager(this);
     public WorldGuardPlugin WorldGuard;
-    public boolean disabled = false;
+    private boolean disabled = false;
     
     public WorldGuardPlugin getWorldGuard(){
         Plugin WG = getServer().getPluginManager().getPlugin("WorldGuard");
@@ -38,18 +38,22 @@ public class MobsInGrass extends JavaPlugin{
         server.getPluginCommand("mig").setExecutor(new MIGCommand(this));
         server.getPluginCommand("mig").setTabCompleter(new TabCompleteManager(this));
     }
+    public void disable(){
+        this.disabled = true;
+    }
+    public void enable(){
+        this.disabled = false;
+    }
+    public boolean isDisabled(){
+        return this.disabled;
+    }
 
     public boolean isMaterial(String input){
-        for (Material m : Material.values()){
-            if (input.equals(m.name())){
-                return true;
-            }
-        }
-        return false;
+        return Material.matchMaterial(input) != null;
     }
     public boolean isEntity(String input){
         for (EntityType m : EntityType.values()){
-            if (input.equals(m.name())){
+            if (input.toUpperCase().equals(m.name())){
                 return true;
             }
         }
@@ -63,7 +67,17 @@ public class MobsInGrass extends JavaPlugin{
             return false;
         }
     }
+    public boolean isDouble(String input){
+        try{
+            Double.parseDouble(input);
+            return true;
+        } catch (NumberFormatException e){
+            return false;
+        }
+    }
 }
 
 
 //use logger for console messages
+//use Material.match(String)
+//fill a cache with blocks which are configured on config Load, reference that cache to get the path of the current blocktype
