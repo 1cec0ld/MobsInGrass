@@ -1,156 +1,53 @@
 package com.gmail.ak1cec0ld.plugins.MobsInGrass;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
 
 public class ConfigManager {
     
     private FileConfiguration config;
     private MobsInGrass plugin;
+    private HashMap<String,String> materialCache = new HashMap<>();
+    private Random r = new Random();
+
     
     public ConfigManager(MobsInGrass plugin){
-        this.config = plugin.getConfig();
         this.plugin = plugin;
-
+        this.config = plugin.getConfig();
         config.options().copyDefaults(true);
         plugin.saveConfig();
         
         if(validateConfig()){
-            plugin.getServer().getConsoleSender().sendMessage("[MiG] Configuration Loaded Successfully!");
+            plugin.getLogger().log(Level.INFO, "[MiG] Configuration Loaded Successfully!");
+            plugin.enable();
+            fillMaterialCache();
         } else {
-            plugin.getServer().getConsoleSender().sendMessage("[MiG] Configuration Loaded With Above Errors!");
+            plugin.getLogger().log(Level.SEVERE, "[MiG] Configuration Loaded With Above Errors!");
+            plugin.disable();
         }
     }
     
-    public void setConfig(FileConfiguration file){
-        plugin.getServer().getConsoleSender().sendMessage("Set Config");
+    public void loadConfig(FileConfiguration file){
         config = file;
-    }
-    public boolean validateConfig(){
-        boolean valid = true;
-        if (!config.contains("settings")){
-            valid = false;
-            plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has No 'settings' at all!");
-        } else {
-            if (!config.contains("settings.global")){
-                valid = false;
-                plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has No 'global' Settings!");
-            } else {
-                if (!config.contains("settings.global.attract")){
-                    valid = false;
-                    plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has No 'attract' Settings!");
-                } else {
-                    if (!config.contains("settings.global.attract.itemtype")){
-                        valid = false;
-                        plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has No Attract 'itemtype' Set!");
-                    }
-                    if (!config.contains("settings.global.attract.amount")){
-                        valid = false;
-                        plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has No Attract 'amount' Set!");
-                    }
-                    if (!config.contains("settings.global.attract.duration")){
-                        valid = false;
-                        plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has No Attract 'duration' Set!");
-                    }
-                }
-                if (!config.contains("settings.global.repel")){
-                    valid = false;
-                    plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has No 'repel' Settings!");
-                } else {
-                    if (!config.contains("settings.global.repel.itemtype")){
-                        valid = false;
-                        plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has No Repel 'itemtype' Set!");
-                    }
-                    if (!config.contains("settings.global.repel.amount")){
-                        valid = false;
-                        plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has No Repel 'amount' Set!");
-                    }
-                    if (!config.contains("settings.global.repel.duration")){
-                        valid = false;
-                        plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has No Repel 'duration' Set!");
-                    }
-                }
-            }
-            if (!config.contains("settings.blocks")){
-                valid = false;
-                plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has Nothing Set for 'blocks' triggers!");
-            } else {
-                //Ensure every blocktype listed is a valid Material, caps included
-                for (String blockName : config.getConfigurationSection("settings.blocks").getKeys(false)){
-                    if (!plugin.isMaterial(blockName)){
-                        valid = false;
-                        plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has an improperly named or not CapsLocked Material: '"+blockName+"'");
-                    }
-                    if (!config.contains("settings.blocks."+blockName+".chances")){
-                        valid = false;
-                        plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has a Material without any 'chances' to trigger mobs: "+blockName);
-                    } else {
-                        if (!config.contains("settings.blocks."+blockName+".chances.base")){
-                            valid = false;
-                            plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has a Material without a 'base' chance to trigger mobs: "+blockName);
-                        }
-                        if (!config.contains("settings.blocks."+blockName+".chances.attract")){
-                            plugin.getServer().getConsoleSender().sendMessage("[MiG] [Warning] Config Has a Material without an 'attract' chance modifier to trigger mobs: "+blockName);
-                        }
-                        if (!config.contains("settings.blocks."+blockName+".chances.repel")){
-                            plugin.getServer().getConsoleSender().sendMessage("[MiG] [Warning] Config Has a Material without a 'repel' chance modifier to trigger mobs: "+blockName);
-                        }
-                    }
-                    if (!config.contains("settings.blocks."+blockName+".regions")){
-                        valid = false;
-                        plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has a Material without any 'regions' where mobs can spawn: "+blockName);
-                    } else {
-                        for (String rName : config.getConfigurationSection("settings.blocks."+blockName+".regions").getKeys(false)){
-                            for (String mobName : config.getConfigurationSection("settings.blocks."+blockName+".regions."+rName).getKeys(false)){
-                                if (!plugin.isEntity(mobName)){
-                                    valid = false;
-                                    plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has an improperly named or not CapsLocked MobName: '"+mobName+"'");
-                                }
-                                if (!config.contains("settings.blocks."+blockName+".regions."+rName+"."+mobName+".weight")){
-                                    valid = false;
-                                    plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has a mob without a weight (chance to spawn): "+blockName+ "->" + rName+ "->" + mobName);
-                                }
-                                if (config.contains("settings.blocks."+blockName+".regions."+rName+"."+mobName+".attributes")){
-                                    String validAttributes = "damage,health,movespeed,armor,knockbackresistance,zombiereinforcement";
-                                    for (String attName : config.getConfigurationSection("settings.blocks."+blockName+".regions."+rName+"."+mobName+".attributes").getKeys(false)){
-                                        if (!validAttributes.contains(attName)){
-                                            valid = false;
-                                            plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has a mob with an invalid attribute name: "+mobName+"'s "+attName);
-                                            plugin.getServer().getConsoleSender().sendMessage("[MiG] Valid attributes are lowercase: damage, health, movespeed, armor, knockbackresistance, zombiereinforcement");
-                                        }
-                                        if (!config.contains("settings.blocks."+blockName+".regions."+rName+"."+mobName+".attributes."+attName+".chance")){
-                                            valid = false;
-                                            plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has a mob with an attribute without a 'chance' to happen: "+mobName+"'s "+attName);
-                                        }
-                                        if (!config.contains("settings.blocks."+blockName+".regions."+rName+"."+mobName+".attributes."+attName+".value")){
-                                            valid = false;
-                                            plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has a mob with an attribute without a 'value' to it: "+mobName+"'s "+attName);
-                                        }
-                                    }
-                                    if (!mobName.equals("ZOMBIE")){
-                                        if (config.contains("settings.blocks."+blockName+".regions."+rName+"."+mobName+".attributes.zombiereinforcement")){
-                                            valid = false;
-                                            plugin.getServer().getConsoleSender().sendMessage("[MiG] Config Has a non-Zombie with Zombiereinforcement attribute: "+blockName+"->"+rName+"->"+mobName);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return valid;
+        fillMaterialCache();
+        plugin.getLogger().log(Level.INFO, "Configuration loaded");
     }
     
     public String getVersion(){
         return config.getString("version");
     }
+    
     public Integer getAttractCount(){
         return config.getInt("settings.global.attract.amount", 10);
     }
@@ -170,59 +67,40 @@ public class ConfigManager {
     public Long getRepelDuration(){
         return new Long(config.getInt("settings.global.repel.duration", 15)*20);
     }
-    public Set<String> getConfiguredMaterials(){
-        if (config.contains("settings.blocks")){
-            return config.getConfigurationSection("settings.blocks").getKeys(false);
-        }
-        return null;
-    }
-    public Integer getPlayerChance(Player player, String toBlock){
+
+    public Double getPlayerChance(Player player, String toBlock){
         String path;
         if (plugin.taskManager.isAttracting(player)){
-            path = "settings.blocks."+toBlock+".chances.attract";
+            path = materialCache.get(toBlock.toUpperCase())+".chances.attract";
         } else if (plugin.taskManager.isRepelling(player)){
-            path = "settings.blocks."+toBlock+".chances.repel";
+            path = materialCache.get(toBlock.toUpperCase())+".chances.repel";
         } else {
-            path = "settings.blocks."+toBlock+".chances.base";
+            path = materialCache.get(toBlock.toUpperCase())+".chances.base";
         }
-        return config.getInt(path, 0);
+        return config.getDouble(path, 0.0);
     }
-    public Set<String> getRegionNames(String toBlock){
-        return config.getConfigurationSection("settings.blocks."+toBlock+".regions").getKeys(false);
-    }
-    public Set<String> getMobs(String toBlock, String regionName) {
-        if (config.contains("settings.blocks."+toBlock+".regions."+regionName)){
-            return config.getConfigurationSection("settings.blocks."+toBlock+".regions."+regionName).getKeys(false);
+    public ConfigurationSection getRandomEntity(String toBlock, String regionName){
+        int weightSum = 0;
+        if (config.contains(materialCache.get(toBlock.toUpperCase())+".regions."+regionName)){
+            for (String mobName : config.getConfigurationSection(materialCache.get(toBlock.toUpperCase())+".regions."+regionName).getKeys(false)){
+                if (plugin.isEntity(mobName)){
+                    weightSum += config.getInt(materialCache.get(toBlock.toUpperCase())+".regions."+regionName+"."+mobName+".weight", 0);
+                }
+            }
+            int iterator = 0;
+            int randomIndex = r.nextInt(weightSum);
+            for (String mobName : config.getConfigurationSection(materialCache.get(toBlock.toUpperCase())+".regions."+regionName).getKeys(false)){
+                iterator += config.getInt(materialCache.get(toBlock.toUpperCase())+".regions."+regionName+"."+mobName+".weight");
+                if (iterator >= randomIndex){
+                    return config.getConfigurationSection(materialCache.get(toBlock.toUpperCase())+".regions."+regionName+"."+mobName);
+                }
+            }
         }
         return null;
     }
-    public int getMobWeight(String toBlock, String regionName, String mobName) {
-        return config.getInt("settings.blocks."+toBlock+".regions."+regionName+"."+mobName+".weight", 0);
+    public Set<String> getRegionNames(String toBlock){
+        return config.getConfigurationSection(materialCache.get(toBlock.toUpperCase())+".regions").getKeys(false);
     }
-    public boolean hasAttributes(String toBlock, String regionName, String mobName){
-        return config.getConfigurationSection("settings.blocks."+toBlock+".regions."+regionName+"."+mobName).contains("attributes");
-    }
-    public int getAttributeChance(String toBlock, String regionName, String mobName, String attName) {
-        return config.getInt("settings.blocks."+toBlock+".regions."+regionName+"."+mobName+".attributes."+attName+".chance", 0);
-    }
-    public int getAttributeValue(String toBlock, String regionName, String mobName, String attName){
-        int def = 0;
-        if (attName == "damage"){
-            def = 2;
-        } else if ( attName == "armor"){
-            def = 0;
-        } else if ( attName == "knockbackresistance"){
-            def = 0;
-        } else if (attName == "zombiereinforcement"){
-            def = 0;
-        } else if (attName == "health"){
-            def = 20;
-        } else if (attName == "movespeed"){
-            def = 1;
-        }
-        return config.getInt("settings.blocks."+toBlock+".regions."+regionName+"."+mobName+".attributes."+attName+".value", def);
-    }
-    
     public Set<String> getMaterialsForThisMob(String mobName){
         Set<String> compilation = new HashSet<String>();
         for(String blockType : config.getConfigurationSection("settings.blocks").getKeys(false)){
@@ -239,9 +117,9 @@ public class ConfigManager {
     }
     public Set<String> getMobsForThisMaterial(String toBlock){
         Set<String> compilation = new HashSet<String>();
-        if (config.contains("settings.blocks."+toBlock)){
-            for (String regionName : config.getConfigurationSection("settings.blocks."+toBlock+".regions").getKeys(false)){
-                for (String mobName : config.getConfigurationSection("settings.blocks."+toBlock+".regions."+regionName).getKeys(false)){
+        if (materialCache.containsKey(toBlock.toUpperCase())){
+            for (String regionName : config.getConfigurationSection(materialCache.get(toBlock.toUpperCase())+".regions").getKeys(false)){
+                for (String mobName : config.getConfigurationSection(materialCache.get(toBlock.toUpperCase())+".regions."+regionName).getKeys(false)){
                     if (!compilation.contains(mobName)){
                         compilation.add(mobName);
                     }
@@ -254,32 +132,103 @@ public class ConfigManager {
         return compilation;
     }
     
+    public Collection<String> getConfiguredMaterials(){
+        /*Set<String> compilation = new HashSet<String>();
+        if (config.contains("settings.blocks")){
+            for (String blockName : config.getConfigurationSection("settings.blocks").getKeys(false)){
+                if (config.getConfigurationSection("settings.blocks."+blockName+".regions").getKeys(false).size() > 0){
+                    compilation.add(blockName);
+                }
+            }
+            return compilation;
+        }
+        return null;*/
+        return materialCache.keySet();
+    }
+    public boolean isConfiguredMaterial(String materialName){
+        return materialCache.containsKey(materialName.toUpperCase());
+    }
+    
+    public boolean validateConfig(){
+        boolean valid = true;
+        return valid;
+    }
+    
+    private void fillMaterialCache(){
+        materialCache.clear();
+        for (String blockName : config.getConfigurationSection("settings.blocks").getKeys(false)){
+            if (plugin.isMaterial(blockName)){
+                materialCache.put(blockName.toUpperCase(), "settings.blocks."+blockName);
+                plugin.getLogger().log(Level.SEVERE, "Added block to materialCache: "+blockName);
+            } else {
+                plugin.getLogger().log(Level.SEVERE, "Mislabeled Block in config: "+blockName);
+            }
+        }
+    }
+    
+    public void setMaterialChance(String blockName, String type, Double value){
+        config.set(materialCache.get(blockName.toUpperCase())+".chances."+type, value);
+        plugin.saveConfig();
+    }
     public boolean removeEntityFromMaterial(String blockName, String mobName, String regionName){
-        if (config.contains("settings.blocks."+blockName+".regions."+regionName+"."+mobName)){
-            config.getConfigurationSection("settings.blocks."+blockName+".regions."+regionName).set(mobName, null);
-            if (config.getConfigurationSection("settings.blocks."+blockName+".regions."+regionName).getKeys(false).size() == 0){
+        if (config.contains(materialCache.get(blockName.toUpperCase())+".regions."+regionName+"."+mobName)){
+            config.getConfigurationSection(materialCache.get(blockName.toUpperCase())+".regions."+regionName).set(mobName, null);
+            if (config.getConfigurationSection(materialCache.get(blockName.toUpperCase())+".regions."+regionName).getKeys(false).size() == 0){
                 removeRegionFromMaterial(blockName, regionName);
             }
-            plugin.saveConfig();
+            try {
+                config.save(new File(plugin.getDataFolder(), "config.yml"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return true;
         }
         return false;
     }
     private void removeRegionFromMaterial(String blockName, String regionName){
-        config.getConfigurationSection("settings.blocks."+blockName+".regions").set(regionName, null);
+        if (config.contains(materialCache.get(blockName.toUpperCase())+".regions."+regionName)){
+            config.set(materialCache.get(blockName.toUpperCase())+".regions."+regionName, null);
+        }
+        if (config.getConfigurationSection(materialCache.get(blockName.toUpperCase())+".regions").getKeys(false).size() == 0){
+            removeMaterialFromConfig(blockName);
+        }
+    }
+    private void removeMaterialFromConfig(String blockName){
+        if (config.contains(materialCache.get(blockName.toUpperCase()))){
+            config.set(materialCache.get(blockName.toUpperCase()), null);
+            materialCache.remove(blockName.toUpperCase());
+        }
     }
     public boolean addEntityToMaterial(String blockName, String mobName, String regionName, Integer weight){
-        if (config.contains("settings.blocks."+blockName+".regions."+regionName+"."+mobName+".weight")){
-            if (config.getInt("settings.blocks."+blockName+".regions."+regionName+"."+mobName+".weight") == weight){
+        if (config.contains(materialCache.get(blockName.toUpperCase())+".regions."+regionName+"."+mobName+".weight")){
+            if (config.getInt(materialCache.get(blockName.toUpperCase())+".regions."+regionName+"."+mobName+".weight") == weight){
                 return false;
             } else {
-                config.set("settings.blocks."+blockName+".regions."+regionName+"."+mobName+".weight", weight);
-                plugin.saveConfig();
+                config.set(materialCache.get(blockName.toUpperCase())+".regions."+regionName+"."+mobName+".weight", weight);
+                try {
+                    config.save(new File(plugin.getDataFolder(), "config.yml"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 return false;
             }
+        } else if (materialCache.containsKey(blockName.toUpperCase())){
+            config.set(materialCache.get(blockName.toUpperCase())+".regions."+regionName+"."+mobName+".weight", weight);
+            try {
+                config.save(new File(plugin.getDataFolder(), "config.yml"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            fillMaterialCache();
+            return true;
         } else {
             config.set("settings.blocks."+blockName+".regions."+regionName+"."+mobName+".weight", weight);
-            plugin.saveConfig();
+            try {
+                config.save(new File(plugin.getDataFolder(), "config.yml"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            fillMaterialCache();
             return true;
         }
     }
