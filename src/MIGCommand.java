@@ -28,16 +28,16 @@ public class MIGCommand implements CommandExecutor {
             plugin.getServer().getConsoleSender().sendMessage(plugin.configManager.getVersion());
         } else if (args.length == 1){
             if (args[0].equalsIgnoreCase("reload")){
-                plugin.configManager.setConfig(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "config.yml")));
+                plugin.configManager.loadConfig(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "config.yml")));
                 if (plugin.configManager.validateConfig()){
                     sender.sendMessage(ChatColor.GREEN+"[MiG] reloaded!");
-                    plugin.disabled = false;
+                    plugin.enable();
                 } else {
                     sender.sendMessage(ChatColor.DARK_RED+"[MiG] reloaded with errors in config.");
-                    plugin.disabled = true;
+                    plugin.disable();
                 }
             } else {
-                if (plugin.disabled){
+                if (plugin.isDisabled()){
                     sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"MobsInGrass is disabled! Check the config and console!");
                 }
                 sender.sendMessage(ChatColor.AQUA+  "Version: "+ChatColor.BLUE+ plugin.configManager.getVersion());
@@ -99,11 +99,17 @@ public class MIGCommand implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("add")){
                 if (plugin.isMaterial(args[1])){
                     if (args[2].equalsIgnoreCase("base")){
-                        
+                        if (plugin.isDouble(args[3])){
+                            plugin.configManager.setMaterialChance(args[1],"base",Double.parseDouble(args[3]));
+                        }
                     } else if (args[2].equalsIgnoreCase("attract")){
-                        
+                        if (plugin.isDouble(args[3])){
+                            plugin.configManager.setMaterialChance(args[1],"attract",Double.parseDouble(args[3]));
+                        }
                     } else if (args[2].equalsIgnoreCase("repel")){
-                        
+                        if (plugin.isDouble(args[3])){
+                            plugin.configManager.setMaterialChance(args[1],"repel",Double.parseDouble(args[3]));
+                        }
                     } else if (plugin.isEntity(args[2])){
                         //add to region default
                         if (plugin.isInteger(args[3])){
