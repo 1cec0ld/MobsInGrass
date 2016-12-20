@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -157,7 +158,7 @@ public class ConfigManager {
     private void fillMaterialCache(){
         materialCache.clear();
         for (String blockName : config.getConfigurationSection("settings.blocks").getKeys(false)){
-            if (plugin.isMaterial(blockName)){
+            if (Material.matchMaterial(blockName) != null){
                 materialCache.put(blockName.toUpperCase(), "settings.blocks."+blockName);
                 plugin.getLogger().log(Level.SEVERE, "Added block to materialCache: "+blockName);
             } else {

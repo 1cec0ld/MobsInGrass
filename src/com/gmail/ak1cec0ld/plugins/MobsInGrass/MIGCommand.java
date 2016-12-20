@@ -3,6 +3,7 @@ package com.gmail.ak1cec0ld.plugins.MobsInGrass;
 import java.io.File;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -53,7 +54,7 @@ public class MIGCommand implements CommandExecutor {
                     for (String str: plugin.configManager.getMaterialsForThisMob(args[1].toUpperCase())){
                         sender.sendMessage(str);
                     }
-                } else if(plugin.isMaterial(args[1])){
+                } else if(Material.matchMaterial(args[1]) != null){
                     for (String stri : plugin.configManager.getMobsForThisMaterial(args[1].toUpperCase())){
                         sender.sendMessage(stri);
                     }
@@ -65,7 +66,7 @@ public class MIGCommand implements CommandExecutor {
             }
         } else if (args.length == 3){
             if (args[0].equalsIgnoreCase("remove")){
-                if (plugin.isMaterial(args[1])){
+                if (Material.matchMaterial(args[1]) != null){
                     if (plugin.isEntity(args[2])){
                         if (plugin.configManager.removeEntityFromMaterial(args[1],args[2],"default")){
                             sender.sendMessage(ChatColor.GREEN+args[2]+" was removed from "+args[1]+" for region "+ChatColor.ITALIC+"default");
@@ -83,7 +84,7 @@ public class MIGCommand implements CommandExecutor {
             }
         } else if (args.length == 4){
             if (args[0].equalsIgnoreCase("remove")){
-                if (plugin.isMaterial(args[1])){
+                if (Material.matchMaterial(args[1]) != null){
                     if (plugin.isEntity(args[2])){
                         if (plugin.configManager.removeEntityFromMaterial(args[1],args[2],args[3])){
                             sender.sendMessage(ChatColor.GREEN+args[2]+" was removed from "+args[1]+" for region "+ChatColor.ITALIC+args[3]);
@@ -97,7 +98,7 @@ public class MIGCommand implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED+args[2]+" is not a valid Block Type!");
                 }
             } else if (args[0].equalsIgnoreCase("add")){
-                if (plugin.isMaterial(args[1])){
+                if (Material.matchMaterial(args[1]) != null){
                     if (args[2].equalsIgnoreCase("base")){
                         if (plugin.isDouble(args[3])){
                             plugin.configManager.setMaterialChance(args[1],"base",Double.parseDouble(args[3]));
@@ -132,7 +133,7 @@ public class MIGCommand implements CommandExecutor {
             }
         } else if (args.length == 5){
             if (args[0].equalsIgnoreCase("add")){
-                if (plugin.isMaterial(args[1])){
+                if (Material.matchMaterial(args[1]) != null){
                     if (plugin.isEntity(args[2])){
                         //add to region named
                         if (plugin.isInteger(args[3])){

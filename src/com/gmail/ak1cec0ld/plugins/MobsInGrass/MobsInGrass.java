@@ -1,6 +1,5 @@
 package com.gmail.ak1cec0ld.plugins.MobsInGrass;
 
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
@@ -48,9 +47,6 @@ public class MobsInGrass extends JavaPlugin{
         return this.disabled;
     }
 
-    public boolean isMaterial(String input){
-        return Material.matchMaterial(input) != null;
-    }
     public boolean isEntity(String input){
         for (EntityType m : EntityType.values()){
             if (input.toUpperCase().equals(m.name())){
