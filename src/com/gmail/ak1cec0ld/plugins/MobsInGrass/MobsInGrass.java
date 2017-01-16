@@ -1,5 +1,7 @@
 package com.gmail.ak1cec0ld.plugins.MobsInGrass;
 
+import java.util.logging.Level;
+
 import org.bukkit.Server;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
@@ -8,20 +10,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class MobsInGrass extends JavaPlugin{
-    public ConfigManager configManager;
-    public TaskManager taskManager = new TaskManager(this);
-    public WorldGuardPlugin WorldGuard;
+    private ConfigManager configManager;
+    private TaskManager taskManager = new TaskManager(this);
+    private WorldGuardPlugin WorldGuard;
     private boolean disabled = false;
     
-    public WorldGuardPlugin getWorldGuard(){
+    private WorldGuardPlugin setWorldGuard(){
         Plugin WG = getServer().getPluginManager().getPlugin("WorldGuard");
         
         if ((WG == null) || (!(WG instanceof WorldGuardPlugin)))
         {
-            System.out.print("[MiG] WorldGuard Not Found!!!!");
+            this.getLogger().log(Level.SEVERE, "WorldGuard Not Found!!!!");
             return null;
         }
-        System.out.print("[MiG] WorldGuard Plugin Loaded!");
+        this.getLogger().log(Level.INFO, "WorldGuard Plugin Loaded!");
         return (WorldGuardPlugin)WG;
     }
     
@@ -29,8 +31,8 @@ public class MobsInGrass extends JavaPlugin{
         this.configManager = new ConfigManager(this);
         Server server = getServer();
         server.getPluginManager().registerEvents(new PlayerListener(this), this);
-        System.out.print("[MiG] MobsInGrass Loaded, v" + configManager.getVersion());
-        this.WorldGuard = getWorldGuard();
+        this.getLogger().log(Level.INFO, "MobsInGrass Loaded, v" + configManager.getVersion());
+        this.WorldGuard = setWorldGuard();
 
         server.getPluginCommand("attract").setExecutor(new AttractCommand(this));
         server.getPluginCommand("repel").setExecutor(new RepelCommand(this));
@@ -71,9 +73,15 @@ public class MobsInGrass extends JavaPlugin{
             return false;
         }
     }
+    
+    public ConfigManager getConfigManager(){
+        return this.configManager;
+    }
+    public TaskManager getTaskManager(){
+        return this.taskManager;
+    }
+    public WorldGuardPlugin getWorldGuard(){
+        return this.WorldGuard;
+    }
 }
 
-
-//use logger for console messages
-//use Material.match(String)
-//fill a cache with blocks which are configured on config Load, reference that cache to get the path of the current blocktype

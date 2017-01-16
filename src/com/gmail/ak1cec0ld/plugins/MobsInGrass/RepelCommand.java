@@ -25,19 +25,19 @@ public class RepelCommand implements CommandExecutor{
             PlayerInventory inv = player.getInventory();
             ItemStack mainhand = inv.getItemInMainHand();
             ItemStack offhand = inv.getItemInOffHand();
-            Integer amount = plugin.configManager.getRepelCount();
-            if((mainhand.getType() == Material.valueOf(plugin.configManager.getRepelMaterial())) && (mainhand.getAmount() >= amount)){
+            Integer amount = plugin.getConfigManager().getRepelCount();
+            if((mainhand.getType() == Material.valueOf(plugin.getConfigManager().getRepelMaterial())) && (mainhand.getAmount() >= amount)){
                 mainhand.setAmount(mainhand.getAmount()-amount);
                 inv.setItemInMainHand(mainhand);
                 player.sendMessage(ChatColor.DARK_RED + "You feel the effects of the repel...");
-                plugin.taskManager.repel(player,plugin.configManager.getRepelDuration());
-            } else if ((offhand.getType() == Material.valueOf(plugin.configManager.getRepelMaterial())) && (offhand.getAmount() >= amount)){
+                plugin.getTaskManager().repel(player,plugin.getConfigManager().getRepelDuration());
+            } else if ((offhand.getType() == Material.valueOf(plugin.getConfigManager().getRepelMaterial())) && (offhand.getAmount() >= amount)){
                 offhand.setAmount(offhand.getAmount()-amount);
                 inv.setItemInOffHand(offhand);
                 player.sendMessage(ChatColor.DARK_RED + "You feel the effects of the repel...");
-                plugin.taskManager.repel(player,plugin.configManager.getRepelDuration());
+                plugin.getTaskManager().repel(player,plugin.getConfigManager().getRepelDuration());
             } else {
-                player.sendMessage(ChatColor.DARK_RED + "You must be holding at least "+amount+" "+plugin.configManager.getRepelMaterial().toString()+" to use Repel!");
+                player.sendMessage(ChatColor.DARK_RED + "You must be holding at least "+amount+" "+plugin.getConfigManager().getRepelMaterial().toString()+" to use Repel!");
             }
         } else {
             plugin.getServer().getConsoleSender().sendMessage("Error, Player Senders Only.");

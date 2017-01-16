@@ -26,11 +26,11 @@ public class MIGCommand implements CommandExecutor {
             if (sender instanceof Player){
                 ((Player)sender).performCommand("mig help");
             }
-            plugin.getServer().getConsoleSender().sendMessage(plugin.configManager.getVersion());
+            plugin.getServer().getConsoleSender().sendMessage(plugin.getConfigManager().getVersion());
         } else if (args.length == 1){
             if (args[0].equalsIgnoreCase("reload")){
-                plugin.configManager.loadConfig(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "config.yml")));
-                if (plugin.configManager.validateConfig()){
+                plugin.getConfigManager().loadConfig(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "config.yml")));
+                if (plugin.getConfigManager().validateConfig()){
                     sender.sendMessage(ChatColor.GREEN+"[MiG] reloaded!");
                     plugin.enable();
                 } else {
@@ -41,21 +41,21 @@ public class MIGCommand implements CommandExecutor {
                 if (plugin.isDisabled()){
                     sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"MobsInGrass is disabled! Check the config and console!");
                 }
-                sender.sendMessage(ChatColor.AQUA+  "Version: "+ChatColor.BLUE+ plugin.configManager.getVersion());
+                sender.sendMessage(ChatColor.AQUA+  "Version: "+ChatColor.BLUE+ plugin.getConfigManager().getVersion());
                 sender.sendMessage(ChatColor.GREEN+ "/MiG <reload,help>");
                 sender.sendMessage(ChatColor.GREEN+ "/MiG <search> <BlockType,MobType>");
-                sender.sendMessage(ChatColor.RED+   "/MiG <remove> <BlockType> <MobType> [WGRegion]");
-                sender.sendMessage(ChatColor.RED+   "/MiG <add> <BlockType> <base,attract,repel> <#weight>");
-                sender.sendMessage(ChatColor.RED+   "/MiG <add> <BlockType> <MobType> <#weight> [WGRegion]");
+                sender.sendMessage(ChatColor.GREEN+ "/MiG <remove> <BlockType> <MobType> [WGRegion]");
+                sender.sendMessage(ChatColor.GREEN+ "/MiG <add> <BlockType> <base,attract,repel> <#weight>");
+                sender.sendMessage(ChatColor.GREEN+ "/MiG <add> <BlockType> <MobType> <#weight> [WGRegion]");
             }
         } else if (args.length == 2){
             if (StringUtils.containsIgnoreCase(args[0], "search")){
                 if(plugin.isEntity(args[1])){
-                    for (String str: plugin.configManager.getMaterialsForThisMob(args[1].toUpperCase())){
+                    for (String str: plugin.getConfigManager().getMaterialsForThisMob(args[1].toUpperCase())){
                         sender.sendMessage(str);
                     }
                 } else if(Material.matchMaterial(args[1]) != null){
-                    for (String stri : plugin.configManager.getMobsForThisMaterial(args[1].toUpperCase())){
+                    for (String stri : plugin.getConfigManager().getMobsForThisMaterial(args[1].toUpperCase())){
                         sender.sendMessage(stri);
                     }
                 } else {
@@ -68,7 +68,7 @@ public class MIGCommand implements CommandExecutor {
             if (args[0].equalsIgnoreCase("remove")){
                 if (Material.matchMaterial(args[1]) != null){
                     if (plugin.isEntity(args[2])){
-                        if (plugin.configManager.removeEntityFromMaterial(args[1],args[2],"default")){
+                        if (plugin.getConfigManager().removeEntityFromMaterial(args[1],args[2],"default")){
                             sender.sendMessage(ChatColor.GREEN+args[2]+" was removed from "+args[1]+" for region "+ChatColor.ITALIC+"default");
                         } else {
                             sender.sendMessage(ChatColor.RED+args[2]+" didn't exist in "+args[1]+" for region "+ChatColor.ITALIC+"default");
@@ -86,7 +86,7 @@ public class MIGCommand implements CommandExecutor {
             if (args[0].equalsIgnoreCase("remove")){
                 if (Material.matchMaterial(args[1]) != null){
                     if (plugin.isEntity(args[2])){
-                        if (plugin.configManager.removeEntityFromMaterial(args[1],args[2],args[3])){
+                        if (plugin.getConfigManager().removeEntityFromMaterial(args[1],args[2],args[3])){
                             sender.sendMessage(ChatColor.GREEN+args[2]+" was removed from "+args[1]+" for region "+ChatColor.ITALIC+args[3]);
                         } else {
                             sender.sendMessage(ChatColor.RED+args[2]+" didn't exist for "+args[1]+" for region "+ChatColor.ITALIC+"default");
@@ -101,20 +101,20 @@ public class MIGCommand implements CommandExecutor {
                 if (Material.matchMaterial(args[1]) != null){
                     if (args[2].equalsIgnoreCase("base")){
                         if (plugin.isDouble(args[3])){
-                            plugin.configManager.setMaterialChance(args[1],"base",Double.parseDouble(args[3]));
+                            plugin.getConfigManager().setMaterialChance(args[1],"base",Double.parseDouble(args[3]));
                         }
                     } else if (args[2].equalsIgnoreCase("attract")){
                         if (plugin.isDouble(args[3])){
-                            plugin.configManager.setMaterialChance(args[1],"attract",Double.parseDouble(args[3]));
+                            plugin.getConfigManager().setMaterialChance(args[1],"attract",Double.parseDouble(args[3]));
                         }
                     } else if (args[2].equalsIgnoreCase("repel")){
                         if (plugin.isDouble(args[3])){
-                            plugin.configManager.setMaterialChance(args[1],"repel",Double.parseDouble(args[3]));
+                            plugin.getConfigManager().setMaterialChance(args[1],"repel",Double.parseDouble(args[3]));
                         }
                     } else if (plugin.isEntity(args[2])){
                         //add to region default
                         if (plugin.isInteger(args[3])){
-                            if(plugin.configManager.addEntityToMaterial(args[1], args[2], "default", Integer.parseInt(args[3]))){
+                            if(plugin.getConfigManager().addEntityToMaterial(args[1], args[2], "default", Integer.parseInt(args[3]))){
                                 sender.sendMessage(ChatColor.GREEN+args[2]+" will now spawn in region "+ChatColor.ITALIC+"default"+ChatColor.RESET+" "+ChatColor.GREEN+" when walking in "+args[1]);
                             } else {
                                 sender.sendMessage(ChatColor.RED+args[2]+" overwrote an existing entry in region "+ChatColor.ITALIC+"default"+ChatColor.RESET+" "+ChatColor.GREEN+" when walking in "+args[1]);
@@ -137,7 +137,7 @@ public class MIGCommand implements CommandExecutor {
                     if (plugin.isEntity(args[2])){
                         //add to region named
                         if (plugin.isInteger(args[3])){
-                            if(plugin.configManager.addEntityToMaterial(args[1], args[2], args[4], Integer.parseInt(args[3]))){
+                            if(plugin.getConfigManager().addEntityToMaterial(args[1], args[2], args[4], Integer.parseInt(args[3]))){
                                 sender.sendMessage(ChatColor.GREEN+args[2]+" will now spawn in region "+ChatColor.ITALIC+"default"+ChatColor.RESET+" "+ChatColor.GREEN+" when walking in "+args[1]);
                             } else {
                                 sender.sendMessage(ChatColor.RED+args[2]+" overwrote an existing entry in region "+ChatColor.ITALIC+args[4]+ChatColor.RESET+" "+ChatColor.GREEN+" when walking in "+args[1]);

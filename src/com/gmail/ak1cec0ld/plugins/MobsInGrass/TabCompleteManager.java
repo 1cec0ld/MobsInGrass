@@ -29,21 +29,21 @@ public class TabCompleteManager implements TabCompleter{
                 suggestions.add("help");
             } else if (args.length == 2){
                 if (StringUtils.containsIgnoreCase(args[0], "search")){
-                    for (String c : plugin.configManager.getConfiguredMaterials()){
+                    for (String c : plugin.getConfigManager().getConfiguredMaterials()){
                         if (!suggestions.contains(c)){
                             suggestions.add(c);
                         }
                     }
                     for (Material v : Material.values()){
                         //plugin.getServer().broadcastMessage("0 "+v.toString());
-                        for (String stri : plugin.configManager.getMobsForThisMaterial(v.toString())){
+                        for (String stri : plugin.getConfigManager().getMobsForThisMaterial(v.toString())){
                             if (!suggestions.contains(stri) && !stri.contains("can spawn")){
                                 suggestions.add(stri);
                             }
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("remove")){
-                    for (String c : plugin.configManager.getConfiguredMaterials()){
+                    for (String c : plugin.getConfigManager().getConfiguredMaterials()){
                         if (!suggestions.contains(c)){
                             suggestions.add(c);
                         }

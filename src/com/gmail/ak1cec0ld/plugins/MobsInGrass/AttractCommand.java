@@ -25,19 +25,19 @@ public class AttractCommand implements CommandExecutor{
             PlayerInventory inv = player.getInventory();
             ItemStack mainhand = inv.getItemInMainHand();
             ItemStack offhand = inv.getItemInOffHand();
-            Integer amount = plugin.configManager.getAttractCount();
-            if((mainhand.getType() == Material.valueOf(plugin.configManager.getAttractMaterial())) && (mainhand.getAmount() >= amount)){
+            Integer amount = plugin.getConfigManager().getAttractCount();
+            if((mainhand.getType() == Material.valueOf(plugin.getConfigManager().getAttractMaterial())) && (mainhand.getAmount() >= amount)){
                 mainhand.setAmount(mainhand.getAmount()-amount);
                 inv.setItemInMainHand(mainhand);
                 player.sendMessage(ChatColor.DARK_RED + "You feel the effects of the attract...");
-                plugin.taskManager.attract(player,plugin.configManager.getAttractDuration());
-            } else if ((offhand.getType() == Material.valueOf(plugin.configManager.getAttractMaterial())) && (offhand.getAmount() >= amount)){
+                plugin.getTaskManager().attract(player,plugin.getConfigManager().getAttractDuration());
+            } else if ((offhand.getType() == Material.valueOf(plugin.getConfigManager().getAttractMaterial())) && (offhand.getAmount() >= amount)){
                 offhand.setAmount(offhand.getAmount()-amount);
                 inv.setItemInOffHand(offhand);
                 player.sendMessage(ChatColor.DARK_RED + "You feel the effects of the attract...");
-                plugin.taskManager.attract(player,plugin.configManager.getAttractDuration());
+                plugin.getTaskManager().attract(player,plugin.getConfigManager().getAttractDuration());
             } else {
-                player.sendMessage(ChatColor.DARK_RED + "You must be holding at least "+amount+" "+plugin.configManager.getAttractMaterial().toString()+" to use Attract!");
+                player.sendMessage(ChatColor.DARK_RED + "You must be holding at least "+amount+" "+plugin.getConfigManager().getAttractMaterial().toString()+" to use Attract!");
             }
         } else {
             plugin.getServer().getConsoleSender().sendMessage("Error, Player Senders Only.");

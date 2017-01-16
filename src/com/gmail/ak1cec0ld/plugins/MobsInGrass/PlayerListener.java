@@ -34,7 +34,7 @@ public class PlayerListener implements Listener{
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent playerQuitEvent){
         UUID uuid = playerQuitEvent.getPlayer().getUniqueId();
-        plugin.taskManager.removePlayer(uuid);
+        plugin.getTaskManager().removePlayer(uuid);
     }
     
     @EventHandler
@@ -48,17 +48,17 @@ public class PlayerListener implements Listener{
             return;
         }
         Material toBlock = to.getBlock().getType();
-        if (!plugin.configManager.isConfiguredMaterial(toBlock.toString())){
+        if (!plugin.getConfigManager().isConfiguredMaterial(toBlock.toString())){
             return;
         }
         Player player = playerMoveEvent.getPlayer();
         int rando = r.nextInt(100)+1;
-        if (plugin.configManager.getPlayerChance(player,toBlock.toString()) < rando){
+        if (plugin.getConfigManager().getPlayerChance(player,toBlock.toString()) < rando){
             return;
         }
         String regionName = "default";
-        Set<String> myRegions = plugin.configManager.getRegionNames(toBlock.toString());
-        ApplicableRegionSet playerRegions = plugin.WorldGuard.getRegionManager(player.getWorld()).getApplicableRegions(player.getLocation());
+        Set<String> myRegions = plugin.getConfigManager().getRegionNames(toBlock.toString());
+        ApplicableRegionSet playerRegions = plugin.getWorldGuard().getRegionManager(player.getWorld()).getApplicableRegions(player.getLocation());
         if (playerRegions.size() != 0){
             for (ProtectedRegion r : playerRegions){
                 if (myRegions.contains(r.getId())){
@@ -66,7 +66,7 @@ public class PlayerListener implements Listener{
                 }
             }
         }
-        ConfigurationSection randomEntity = plugin.configManager.getRandomEntity(toBlock.toString(), regionName);
+        ConfigurationSection randomEntity = plugin.getConfigManager().getRandomEntity(toBlock.toString(), regionName);
         if (randomEntity == null){
             return;
         } else {

@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -71,9 +72,9 @@ public class ConfigManager {
 
     public Double getPlayerChance(Player player, String toBlock){
         String path;
-        if (plugin.taskManager.isAttracting(player)){
+        if (plugin.getTaskManager().isAttracting(player)){
             path = materialCache.get(toBlock.toUpperCase())+".chances.attract";
-        } else if (plugin.taskManager.isRepelling(player)){
+        } else if (plugin.getTaskManager().isRepelling(player)){
             path = materialCache.get(toBlock.toUpperCase())+".chances.repel";
         } else {
             path = materialCache.get(toBlock.toUpperCase())+".chances.base";
@@ -152,6 +153,83 @@ public class ConfigManager {
     
     public boolean validateConfig(){
         boolean valid = true;
+        if (config.contains("settings.blocks")){
+            for (String section : config.getConfigurationSection("settings.blocks").getKeys(false)){
+                if (!validateBlock(config.getConfigurationSection("settings.blocks."+section))){
+                    valid = false;
+                }
+            }
+        } else {
+            plugin.getLogger().log(Level.SEVERE, "Config is missing any blocks!");
+            valid = false;
+        }
+        return valid;
+    }
+    private boolean validateBlock(ConfigurationSection input){
+        boolean valid = true;
+        if (Material.matchMaterial(input.getName()) == null){
+            plugin.getLogger().log(Level.SEVERE, "Config contains a block that isn't a valid material: "+input.getName());
+            valid = false;
+        } else {
+            if (!input.contains("regions")){
+                plugin.getLogger().log(Level.SEVERE, "Config contains a block without any regions: "+input.getName());
+                valid = false;
+            } else {
+                for (String section : input.getConfigurationSection("regions").getKeys(false)){
+                    if (!validateRegion(input.getConfigurationSection("regions."+section))){
+                        valid = false;
+                    }
+                }
+            }
+        }
+        return valid;
+    }
+    private boolean validateRegion(ConfigurationSection input){
+        boolean valid = true;
+        for (String mobName : input.getKeys(false)){
+            if (!plugin.isEntity(mobName)){
+                plugin.getLogger().log(Level.SEVERE, "Config contains a block with an invalid mob name: "+input.getName()+"->"+mobName);
+                valid = false;
+            } else {
+                if (!validateMob(input.getConfigurationSection(mobName))){
+                    valid = false;
+                }
+            }
+        }
+        return valid;
+    }
+    private boolean validateMob(ConfigurationSection input){
+        boolean valid = true;
+        if (!input.contains("weight")){
+            plugin.getLogger().log(Level.SEVERE, "Config contains a block without any regions: "+input.getName());
+            valid = false;
+        } else {
+            if (input.contains("attributes")){
+                String validAttributes = "damage,health,movespeed,armor,knockbackresistance,zombiereinforcement";
+                for (String attName : input.getConfigurationSection("attributes").getKeys(false)){
+                    if (!StringUtils.containsIgnoreCase(validAttributes,attName)){
+                        valid = false;
+                        plugin.getLogger().log(Level.SEVERE, "Config Has a mob with an invalid attribute name: "+input.getName()+"'s "+attName);
+                        plugin.getLogger().log(Level.SEVERE, "Valid attributes are lowercase: damage, health, movespeed, armor, knockbackresistance, zombiereinforcement");
+                    } else {
+                        if (!input.contains("attributes."+attName+".chance")){
+                            valid = false;
+                            plugin.getLogger().log(Level.SEVERE, "Config Has a mob with an attribute without a 'chance' to happen: "+input.getName()+"'s "+attName);
+                        }
+                        if (!input.contains("attributes."+attName+".value")){
+                            valid = false;
+                            plugin.getLogger().log(Level.SEVERE, "Config Has a mob with an attribute without a 'value' to it: "+input.getName()+"'s "+attName);
+                        }
+                    }
+                }
+                if (!input.getName().equalsIgnoreCase("ZOMBIE")){
+                    if (input.contains("attributes.zombiereinforcement")){
+                        valid = false;
+                        plugin.getLogger().log(Level.SEVERE, "Config Has a non-Zombie with Zombiereinforcement attribute: "+input.getName());
+                    }
+                }
+            }
+        }
         return valid;
     }
     
