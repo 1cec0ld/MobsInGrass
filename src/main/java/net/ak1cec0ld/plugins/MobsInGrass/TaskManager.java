@@ -1,4 +1,4 @@
-package com.gmail.ak1cec0ld.plugins.MobsInGrass;
+package net.ak1cec0ld.plugins.MobsInGrass;
 
 import java.util.HashMap;
 import java.util.HashSet;

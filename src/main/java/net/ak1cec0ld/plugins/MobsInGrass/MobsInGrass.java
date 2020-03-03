@@ -1,7 +1,12 @@
-package com.gmail.ak1cec0ld.plugins.MobsInGrass;
+package net.ak1cec0ld.plugins.MobsInGrass;
 
 import java.util.logging.Level;
 
+import net.ak1cec0ld.plugins.MobsInGrass.commands.AttractCommand;
+import net.ak1cec0ld.plugins.MobsInGrass.commands.MIGCommand;
+import net.ak1cec0ld.plugins.MobsInGrass.commands.RepelCommand;
+import net.ak1cec0ld.plugins.MobsInGrass.commands.TabCompleteManager;
+import net.ak1cec0ld.plugins.MobsInGrass.files.ConfigManager;
 import org.bukkit.Server;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
@@ -10,24 +15,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class MobsInGrass extends JavaPlugin{
+    private static MobsInGrass instance;
     private ConfigManager configManager;
     private TaskManager taskManager = new TaskManager(this);
     private WorldGuardPlugin WorldGuard;
     private boolean disabled = false;
     
-    private WorldGuardPlugin setWorldGuard(){
-        Plugin WG = getServer().getPluginManager().getPlugin("WorldGuard");
-        
-        if ((WG == null) || (!(WG instanceof WorldGuardPlugin)))
-        {
-            this.getLogger().log(Level.SEVERE, "WorldGuard Not Found!!!!");
-            return null;
-        }
-        this.getLogger().log(Level.INFO, "WorldGuard Plugin Loaded!");
-        return (WorldGuardPlugin)WG;
-    }
-    
     public void onEnable(){
+        instance = this;
         this.configManager = new ConfigManager(this);
         Server server = getServer();
         server.getPluginManager().registerEvents(new PlayerListener(this), this);
@@ -39,6 +34,19 @@ public class MobsInGrass extends JavaPlugin{
         server.getPluginCommand("mig").setExecutor(new MIGCommand(this));
         server.getPluginCommand("mig").setTabCompleter(new TabCompleteManager(this));
     }
+
+    private static WorldGuardPlugin setWorldGuard(){
+        Plugin WG = instance.getServer().getPluginManager().getPlugin("WorldGuard");
+
+        if (!(WG instanceof WorldGuardPlugin))
+        {
+            instance.getLogger().severe("WorldGuard Not Found!!!!");
+            return null;
+        }
+        instance.getLogger().info("WorldGuard Plugin Loaded!");
+        return (WorldGuardPlugin)WG;
+    }
+
     public void disable(){
         this.disabled = true;
     }

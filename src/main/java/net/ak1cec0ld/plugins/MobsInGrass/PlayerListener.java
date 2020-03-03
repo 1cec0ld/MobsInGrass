@@ -1,9 +1,12 @@
-package com.gmail.ak1cec0ld.plugins.MobsInGrass;
+package net.ak1cec0ld.plugins.MobsInGrass;
 
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -58,7 +61,8 @@ public class PlayerListener implements Listener{
         }
         String regionName = "default";
         Set<String> myRegions = plugin.getConfigManager().getRegionNames(toBlock.toString());
-        ApplicableRegionSet playerRegions = plugin.getWorldGuard().getRegionManager(player.getWorld()).getApplicableRegions(player.getLocation());
+        RegionContainer getRC = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        ApplicableRegionSet playerRegions = getRC.createQuery().getApplicableRegions(BukkitAdapter.adapt(to));
         if (playerRegions.size() != 0){
             for (ProtectedRegion r : playerRegions){
                 if (myRegions.contains(r.getId())){

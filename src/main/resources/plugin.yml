@@ -1,4 +1,4 @@
-main: com.gmail.ak1cec0ld.plugins.MobsInGrass.MobsInGrass
+main: net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass
 name: MobsInGrass
 version: 5.1.0
 author: [Paradox1123, 1cec0ld, hexacyanide]

@@ -1,8 +1,9 @@
-package com.gmail.ak1cec0ld.plugins.MobsInGrass;
+package net.ak1cec0ld.plugins.MobsInGrass.commands;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.command.Command;

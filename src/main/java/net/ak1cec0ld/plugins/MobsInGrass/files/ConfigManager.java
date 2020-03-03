@@ -1,4 +1,4 @@
-package com.gmail.ak1cec0ld.plugins.MobsInGrass;
+package net.ak1cec0ld.plugins.MobsInGrass.files;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 
+import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -31,11 +32,11 @@ public class ConfigManager {
         plugin.saveConfig();
         
         if(validateConfig()){
-            plugin.getLogger().log(Level.INFO, "[MiG] Configuration Loaded Successfully!");
+            plugin.getLogger().info("[MiG] Configuration Loaded Successfully!");
             plugin.enable();
             fillMaterialCache();
         } else {
-            plugin.getLogger().log(Level.SEVERE, "[MiG] Configuration Loaded With Above Errors!");
+            plugin.getLogger().severe("[MiG] Configuration Loaded With Above Errors!");
             plugin.disable();
         }
     }
@@ -43,7 +44,7 @@ public class ConfigManager {
     public void loadConfig(FileConfiguration file){
         config = file;
         fillMaterialCache();
-        plugin.getLogger().log(Level.INFO, "Configuration loaded");
+        plugin.getLogger().info( "Configuration loaded");
     }
     
     public String getVersion(){

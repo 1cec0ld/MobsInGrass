@@ -1,7 +1,8 @@
-package com.gmail.ak1cec0ld.plugins.MobsInGrass;
+package net.ak1cec0ld.plugins.MobsInGrass.commands;
 
 import java.io.File;
 
+import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
