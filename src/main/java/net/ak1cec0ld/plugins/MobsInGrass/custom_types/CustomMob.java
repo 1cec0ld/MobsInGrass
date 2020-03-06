@@ -21,7 +21,7 @@ public class CustomMob {
     private EntityType entityType;
     private Entity entity;
     private int amount = 1;
-    private boolean aware = true;
+    //private boolean aware = true;
     private boolean baby = false;
     private boolean glowing = false;
     private boolean gravity = true;
@@ -56,7 +56,7 @@ public class CustomMob {
     public void setBool(String attr, boolean in){
         switch (attr.toLowerCase()){
             case "aware":
-                this.aware = in;
+                //this.aware = in;
                 break;
             case "baby":
                 this.baby = in;
@@ -163,7 +163,7 @@ public class CustomMob {
     private void setMobStats(Mob mob){
         setAttributes(mob);
 
-        mob.setAware(aware);
+        //mob.setAware(aware);
         mob.setGlowing(glowing);
         mob.setGravity(gravity);
         mob.setInvulnerable(invulnerable);

@@ -3,6 +3,7 @@ package net.ak1cec0ld.plugins.MobsInGrass;
 import java.util.logging.Level;
 
 import net.ak1cec0ld.plugins.MobsInGrass.files.FileManager;
+import net.ak1cec0ld.plugins.MobsInGrass.listeners.Listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,6 +18,7 @@ public class MobsInGrass extends JavaPlugin{
     public void onEnable(){
         instance = this;
         new FileManager();
+        new Listeners();
         this.getLogger().log(Level.INFO, "MobsInGrass Loaded, v5");
         WorldGuard = setWorldGuard();
     }
