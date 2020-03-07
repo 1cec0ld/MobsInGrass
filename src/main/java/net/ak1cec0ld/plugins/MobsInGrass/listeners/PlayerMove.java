@@ -1,7 +1,5 @@
 package net.ak1cec0ld.plugins.MobsInGrass.listeners;
 
-import java.util.Random;
-
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.MobProvider;
 import org.bukkit.Location;
@@ -10,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+
+import java.util.Random;
 
 public class PlayerMove implements Listener{
 
@@ -21,7 +21,7 @@ public class PlayerMove implements Listener{
     
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent playerMoveEvent){
-        if (MobsInGrass.instance().isDisabled())return;
+        if (MobsInGrass.isDisabled())return;
         Location to = playerMoveEvent.getTo();
         if(to == null)return;
         Location from = playerMoveEvent.getFrom();
