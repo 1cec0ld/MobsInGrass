@@ -3,17 +3,21 @@ package net.ak1cec0ld.plugins.MobsInGrass.commands;
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.MobProvider;
 import net.ak1cec0ld.plugins.MobsInGrass.files.MobsManager;
+import net.ak1cec0ld.plugins.MobsInGrass.files.TimeManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
 public class MIGCommand implements TabExecutor {
     
-    public MIGCommand(){}
+    public MIGCommand(){
+        MobsInGrass.instance().getServer().getPluginCommand("mig").setExecutor(this);
+    }
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -34,6 +38,11 @@ public class MIGCommand implements TabExecutor {
                         break;
                     case "list":
                         sender.sendMessage(MobProvider.listMobs());
+                        break;
+                    case "time":
+                        if(sender instanceof Player) {
+                            sender.sendMessage(TimeManager.fromServerTime(((Player)sender).getWorld().getTime()));
+                        }
                         break;
                     default:
                         help(sender);

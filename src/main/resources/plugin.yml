@@ -6,10 +6,6 @@ description: Simulate wild Pokemon appearing in tall grass and other blocks by u
 depend: [WorldGuard]
 prefix: MiG
 commands:
-  repel:
-    description: Repels Pokemon. Lasts 15 seconds.
-  attract:
-    description: Attracts Pokemon. Lasts 15 seconds.
   mig:
     description: Does Everything Else
     permission: mobsingrass.admin

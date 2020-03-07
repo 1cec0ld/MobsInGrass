@@ -25,16 +25,6 @@ public class TimeManager {
         initialize();
     }
 
-    /*
-
-    times:
-        morning: 22550
-        day: 4000
-        evening: 11000
-        night: 12000
-
-     */
-
     private void initialize(){
         mappedValues.clear();
         ConfigurationSection times = storage.getConfigurationSection("times");
