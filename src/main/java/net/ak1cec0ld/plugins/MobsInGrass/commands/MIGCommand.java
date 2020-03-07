@@ -1,28 +1,19 @@
 package net.ak1cec0ld.plugins.MobsInGrass.commands;
 
-import java.io.File;
-import java.util.List;
-
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import net.ak1cec0ld.plugins.MobsInGrass.files.MobsManager;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.List;
 
 public class MIGCommand implements TabExecutor {
-
-    private MobsInGrass plugin;
     
-    public MIGCommand(MobsInGrass plugin){
-        this.plugin = plugin;
-    }
+    public MIGCommand(){}
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -44,7 +35,7 @@ public class MIGCommand implements TabExecutor {
                         MobsInGrass.enable();
                         break;
                     default:
-                        if (plugin.isDisabled()){
+                        if (MobsInGrass.isDisabled()){
                             sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"MobsInGrass is disabled! Check the config and console!");
                         }
                         sender.sendMessage(ChatColor.AQUA+  "Version: 5");

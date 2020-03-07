@@ -1,14 +1,14 @@
 package net.ak1cec0ld.plugins.MobsInGrass;
 
-import java.util.logging.Level;
-
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import net.ak1cec0ld.plugins.MobsInGrass.commands.MIGCommand;
 import net.ak1cec0ld.plugins.MobsInGrass.files.FileManager;
 import net.ak1cec0ld.plugins.MobsInGrass.listeners.Listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import java.util.logging.Level;
 
 public class MobsInGrass extends JavaPlugin{
     private static MobsInGrass instance;
@@ -19,6 +19,7 @@ public class MobsInGrass extends JavaPlugin{
         instance = this;
         new FileManager();
         new Listeners();
+        new MIGCommand();
         this.getLogger().log(Level.INFO, "MobsInGrass Loaded, v5");
         WorldGuard = setWorldGuard();
     }
@@ -50,7 +51,7 @@ public class MobsInGrass extends JavaPlugin{
         new FileManager();
     }
 
-    public boolean isDisabled(){
+    public static boolean isDisabled(){
         return disabled;
     }
 

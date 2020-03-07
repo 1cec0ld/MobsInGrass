@@ -21,11 +21,13 @@ public class CustomMob {
     private EntityType entityType;
     private Entity entity;
     private int amount = 1;
-    //private boolean aware = true;
+    private int size = 1;
+    private boolean aware = true;
     private boolean baby = false;
     private boolean glowing = false;
     private boolean gravity = true;
     private boolean invulnerable = false;
+    private boolean killer = false;
     private boolean powered = false;
     private boolean silent = false;
     private double absorptionAmount = FAKE_NULL;
@@ -53,10 +55,13 @@ public class CustomMob {
     public void setAmount(int in){
         this.amount = in;
     }
+    public void setSize(int in){
+        this.size = in;
+    }
     public void setBool(String attr, boolean in){
         switch (attr.toLowerCase()){
             case "aware":
-                //this.aware = in;
+                this.aware = in;
                 break;
             case "baby":
                 this.baby = in;
@@ -69,6 +74,9 @@ public class CustomMob {
                 break;
             case "invulnerable":
                 this.invulnerable = in;
+                break;
+            case "killer":
+                this.killer = in;
                 break;
             case "powered":
                 this.powered = in;
@@ -149,7 +157,7 @@ public class CustomMob {
             }
             Mob mob = (Mob) entity;
 
-            setMobStats(mob);
+            applyMobStats(mob);
         }
     }
 
@@ -160,23 +168,35 @@ public class CustomMob {
         }
     }
 
-    private void setMobStats(Mob mob){
-        setAttributes(mob);
+    private void applyMobStats(Mob mob){
+        applyAttributes(mob);
 
-        //mob.setAware(aware);
+        mob.setAware(aware);
         mob.setGlowing(glowing);
         mob.setGravity(gravity);
         mob.setInvulnerable(invulnerable);
         mob.setSilent(silent);
 
+
         if (absorptionAmount != FAKE_NULL) {
             mob.setAbsorptionAmount(absorptionAmount);
         }
-        if (mob instanceof Zombie){
-            ((Zombie)mob).setBaby(baby);
+        if (mob instanceof Ageable && baby){
+            ((Ageable)mob).setBaby();
+            ((Ageable)mob).setAgeLock(true);
+            ((Ageable)mob).setBreed(false);
         }
         if (mob instanceof Creeper){
             ((Creeper)mob).setPowered(powered);
+        }
+        if (mob instanceof Rabbit && killer){
+            ((Rabbit)mob).setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);
+        }
+        if (mob instanceof Slime){
+            ((Slime)mob).setSize(size);
+        }
+        if (mob instanceof Zombie){
+            ((Zombie)mob).setBaby(baby);
         }
         if(tags != null) {
             mob.getPersistentDataContainer().set(TAGS, PersistentDataType.STRING, tags);
@@ -189,7 +209,7 @@ public class CustomMob {
         }
         recursionCounter--;
     }
-    private void setAttributes(Mob mob){
+    private void applyAttributes(Mob mob){
         if(maxHealth != FAKE_NULL && mob.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null){
             Objects.requireNonNull(mob.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(maxHealth);
             mob.setHealth(maxHealth);

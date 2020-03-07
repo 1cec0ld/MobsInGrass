@@ -14,7 +14,7 @@ public class MobsManager {
 
     private static CustomYMLStorage yml;
     private static YamlConfiguration storage;
-    private static final List<String> booleans = Arrays.asList("aware","baby","glowing","gravity","invulnerable","powered","silent");
+    private static final List<String> booleans = Arrays.asList("aware","baby","glowing","gravity","invulnerable","killer","powered","silent");
     private static final List<String> doubles = Arrays.asList("absorption","armor","armorToughness","attackDamage","attackSpeed","flyingSpeed","knockbackResist","maxHealth","movementSpeed");
 
 
@@ -31,6 +31,7 @@ public class MobsManager {
         ID:
             entityType: {https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Mob.html}
         ##    amount: {int}
+        ##    size: {int}               slime/magmacube only
         ##    absorption: {double}
         ##    armor: {double}
         ##    armorToughness: {double}
@@ -45,8 +46,10 @@ public class MobsManager {
         ##    glowing: {bool}
         ##    gravity: {bool}
         ##    invulnerable: {bool}
-        ##    powered: {bool}
+        ##    killer: {bool}            rabbits only
+        ##    powered: {bool}           creepers only
         ##    silent: {bool}
+        ##    wither: {bool}            skeletons only
         ##    announcement: {&4string}
         ##    tags: {string1,string2,string3,string4} Note, these will eventually determine mob powers
         ##    passengers:
@@ -68,6 +71,7 @@ public class MobsManager {
         try {
             CustomMob creating = new CustomMob(id, EntityType.valueOf(section.getString("entityType").toUpperCase()));
             creating.setAmount(section.getInt("amount", 1));
+            creating.setSize(section.getInt("size",1));
             for(String eachBool : booleans){
                 if(section.contains(eachBool)){
                     creating.setBool(eachBool, section.getBoolean(eachBool));
