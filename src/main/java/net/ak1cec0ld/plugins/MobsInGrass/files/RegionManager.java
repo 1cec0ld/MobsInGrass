@@ -10,7 +10,7 @@ public class RegionManager {
     private static YamlConfiguration storage;
 
     public RegionManager(){
-        yml = new CustomYMLStorage(MobsInGrass.instance(),"Mobs.yml","MobsInGrass");
+        yml = new CustomYMLStorage(MobsInGrass.instance(),"Regions.yml","MobsInGrass");
         storage = yml.getYamlConfiguration();
         yml.save();
 
