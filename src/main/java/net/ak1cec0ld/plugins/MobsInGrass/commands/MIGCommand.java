@@ -1,6 +1,7 @@
 package net.ak1cec0ld.plugins.MobsInGrass.commands;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
+import net.ak1cec0ld.plugins.MobsInGrass.custom_types.MobProvider;
 import net.ak1cec0ld.plugins.MobsInGrass.files.MobsManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -19,9 +20,7 @@ public class MIGCommand implements TabExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         switch (args.length){
             case 0:
-                if (sender instanceof Player){
-                    ((Player)sender).performCommand("mig help");
-                }
+                help(sender);
                 break;
             case 1:
                 switch (args[0].toLowerCase()){
@@ -34,37 +33,36 @@ public class MIGCommand implements TabExecutor {
                     case "enable":
                         MobsInGrass.enable();
                         break;
+                    case "list":
+                        sender.sendMessage(MobProvider.listMobs());
+                        break;
                     default:
-                        if (MobsInGrass.isDisabled()){
-                            sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"MobsInGrass is disabled! Check the config and console!");
-                        }
-                        sender.sendMessage(ChatColor.AQUA+  "Version: 5");
-                        sender.sendMessage(ChatColor.GREEN+ "/MiG <reload,help,disable,enable>");
+                        help(sender);
                 }
                 break;
             case 2:
                 if (StringUtils.containsIgnoreCase(args[0], "search")){
                 } else {
-                    ((Player)sender).performCommand("mig help");
+                    help(sender);
                 }
                 break;
             case 3:
                 if (args[0].equalsIgnoreCase("remove")){
                 } else {
-                    ((Player)sender).performCommand("mig help");
+                    help(sender);
                 }
                 break;
             case 4:
                 if (args[0].equalsIgnoreCase("remove")){
                 } else if (args[0].equalsIgnoreCase("add")){
                 } else {
-                    ((Player)sender).performCommand("mig help");
+                    help(sender);
                 }
                 break;
             case 5:
                 if (args[0].equalsIgnoreCase("add")){
                 } else {
-                    ((Player)sender).performCommand("mig help");
+                    help(sender);
                 }
                 break;
         }
@@ -74,6 +72,14 @@ public class MIGCommand implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         return null;
+    }
+
+    private void help(CommandSender sender){
+        if (MobsInGrass.isDisabled()){
+            sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"MobsInGrass is disabled! Check the config and console!");
+        }
+        sender.sendMessage(ChatColor.AQUA+  "Version: 5");
+        sender.sendMessage(ChatColor.GREEN+ "/MiG <reload,help,disable,enable,list>");
     }
 }
 /*

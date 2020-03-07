@@ -25,7 +25,6 @@ public class MobsManager {
 
         initialize();
     }
-
     /*
     mobs:
         ID:
@@ -49,7 +48,6 @@ public class MobsManager {
         ##    killer: {bool}            rabbits only
         ##    powered: {bool}           creepers only
         ##    silent: {bool}
-        ##    wither: {bool}            skeletons only
         ##    announcement: {&4string}
         ##    tags: {string1,string2,string3,string4} Note, these will eventually determine mob powers
         ##    passengers:

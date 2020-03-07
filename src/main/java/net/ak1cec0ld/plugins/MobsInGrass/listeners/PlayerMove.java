@@ -27,7 +27,6 @@ public class PlayerMove implements Listener{
         Location from = playerMoveEvent.getFrom();
         if (sameSpot(from,to))return;
 
-        Material toBlock = to.getBlock().getType();
         Player player = playerMoveEvent.getPlayer();
         int playerRoll = r.nextInt(100)+1;
         if (5 < playerRoll)return;                            //todo: pull this from the attract/repel level

@@ -5,6 +5,7 @@ public class FileManager {
 
     public FileManager(){
         new MobsManager();
+        new RegionManager();
         //new ItemManager();
     }
 }
