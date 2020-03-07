@@ -1,14 +1,13 @@
 package net.ak1cec0ld.plugins.MobsInGrass.commands;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
-import net.ak1cec0ld.plugins.MobsInGrass.custom_types.MobProvider;
+import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.MobProvider;
 import net.ak1cec0ld.plugins.MobsInGrass.files.MobsManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 

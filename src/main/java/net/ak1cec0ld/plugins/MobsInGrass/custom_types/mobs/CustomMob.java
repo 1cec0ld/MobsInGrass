@@ -1,4 +1,4 @@
-package net.ak1cec0ld.plugins.MobsInGrass.custom_types;
+package net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import org.bukkit.ChatColor;

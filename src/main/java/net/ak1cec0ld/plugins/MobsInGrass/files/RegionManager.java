@@ -1,6 +1,7 @@
 package net.ak1cec0ld.plugins.MobsInGrass.files;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class RegionManager {
@@ -15,8 +16,16 @@ public class RegionManager {
 
         initialize();
     }
+    /*
+    regions:
+        kanto:
+            route1:
+                - Skeleton,20,list,of,time,enums
+                - Skeleton,30,list,of,enums
 
+    */
     private void initialize(){
+        ConfigurationSection allGenerations = storage.getConfigurationSection("regions");
 
     }
 }

@@ -1,9 +1,9 @@
 package net.ak1cec0ld.plugins.MobsInGrass.listeners;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
-import net.ak1cec0ld.plugins.MobsInGrass.custom_types.MobProvider;
+import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.MobProvider;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,16 +20,17 @@ public class PlayerMove implements Listener{
     }
     
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent playerMoveEvent){
+    public void onPlayerMove(PlayerMoveEvent event){
         if (MobsInGrass.isDisabled())return;
-        Location to = playerMoveEvent.getTo();
+        if (event.getPlayer().getGameMode() != GameMode.SURVIVAL)return;
+        Location to = event.getTo();
         if(to == null)return;
-        Location from = playerMoveEvent.getFrom();
+        Location from = event.getFrom();
         if (sameSpot(from,to))return;
 
-        Player player = playerMoveEvent.getPlayer();
+        Player player = event.getPlayer();
         int playerRoll = r.nextInt(100)+1;
-        if (5 < playerRoll)return;                            //todo: pull this from the attract/repel level
+        if (10 < playerRoll)return;                            //todo: pull 10 from the attract/repel level
 
 
         MobProvider.random().spawn(player.getLocation());

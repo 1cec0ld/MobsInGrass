@@ -1,8 +1,8 @@
 package net.ak1cec0ld.plugins.MobsInGrass.files;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
-import net.ak1cec0ld.plugins.MobsInGrass.custom_types.CustomMob;
-import net.ak1cec0ld.plugins.MobsInGrass.custom_types.MobProvider;
+import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.CustomMob;
+import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.MobProvider;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
