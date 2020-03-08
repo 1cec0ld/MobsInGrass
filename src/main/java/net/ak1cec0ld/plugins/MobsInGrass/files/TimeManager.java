@@ -29,8 +29,12 @@ public class TimeManager {
         mappedValues.clear();
         ConfigurationSection times = storage.getConfigurationSection("times");
         for(String eachTimeSlot : times.getKeys(false)){
-            addValue(times.getLong(eachTimeSlot), eachTimeSlot);
+            addValue(times.getLong(eachTimeSlot), eachTimeSlot.toLowerCase());
         }
+    }
+
+    public static boolean contains(String time){
+        return mappedValues.values().contains(time.toLowerCase());
     }
 
     public static void addValue(Long startTime, String timeSlot){
@@ -42,6 +46,6 @@ public class TimeManager {
         if(e != null){
             e = mappedValues.lowerEntry(currentTime);
         }
-        return e == null ? mappedValues.lastEntry().getValue() : e.getValue();
+        return e == null ? mappedValues.lastEntry().getValue() : e.getValue().toLowerCase();
     }
 }

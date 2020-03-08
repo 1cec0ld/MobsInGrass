@@ -90,8 +90,7 @@ public class MobsManager {
             creating.setAnnouncement(section.getString("announcement",null));
             return creating;
         }catch(NullPointerException e){
-            MobsInGrass.debug("No entityType found for: " + id + ", this is case sensitive \"entityType\".");
-            MobsInGrass.disable();
+            MobsInGrass.disable("No entityType found for: " + id + ", this is case sensitive \"entityType\".");
             return null;
         }
     }

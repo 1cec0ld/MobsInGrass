@@ -3,11 +3,10 @@ name: MobsInGrass
 version: 5.1.0
 author: [Paradox1123, 1cec0ld, hexacyanide]
 description: Simulate wild Pokemon appearing in tall grass and other blocks by using Minecraft Mobs
-depend: [WorldGuard]
 prefix: MiG
 commands:
   mig:
-    description: Does Everything Else
+    description: Does Everything
     permission: mobsingrass.admin
     permission-message: Now is not the time to use that!
 permissions:

@@ -28,10 +28,10 @@ public class MIGCommand implements TabExecutor {
             case 1:
                 switch (args[0].toLowerCase()){
                     case "reload":
-                        MobsManager.reload();
+                        MobsInGrass.reload();
                         break;
                     case "disable":
-                        MobsInGrass.disable();
+                        MobsInGrass.disable("Operator Command");
                         break;
                     case "enable":
                         MobsInGrass.enable();

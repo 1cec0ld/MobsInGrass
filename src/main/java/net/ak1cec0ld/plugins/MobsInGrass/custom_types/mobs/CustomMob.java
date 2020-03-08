@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class CustomMob {
-    private static final NamespacedKey TAGS = new NamespacedKey(MobsInGrass.instance(),"Tags");
-    private final double FAKE_NULL = Double.MIN_NORMAL;
+    private static final double FAKE_NULL = Double.MIN_NORMAL;
     private static int recursionCounter = 0;
 
     private String identifier;
@@ -51,6 +50,9 @@ public class CustomMob {
         this.passengers = new ArrayList<>();
     }
 
+    public String getIdentifier(){
+        return identifier;
+    }
 
     public void setAmount(int in){
         this.amount = in;
@@ -86,8 +88,7 @@ public class CustomMob {
                 break;
             default:
                 MobsInGrass.debug("Invalid boolean attribute attempted to set: " + attr);
-                MobsInGrass.debug("Use: aware,baby,glowing,gravity,invulnerable,powered,silent");
-                MobsInGrass.disable();
+                MobsInGrass.disable("Use: aware,baby,glowing,gravity,invulnerable,powered,silent");
         }
     }
     public void setDouble(String attr, double in){
@@ -121,15 +122,13 @@ public class CustomMob {
                 break;
             default:
                 MobsInGrass.debug("Invalid double attribute attempted to set: " + attr);
-                MobsInGrass.debug("Use: absorption,armor,armorToughness,attackDamage,attackSpeed,flyingSpeed,knockbackResist,maxHealth,movementSpeed");
-                MobsInGrass.disable();
+                MobsInGrass.disable("Use: absorption,armor,armorToughness,attackDamage,attackSpeed,flyingSpeed,knockbackResist,maxHealth,movementSpeed");
         }
     }
     public void addPassenger(CustomMob in){
         if(in == null){
             MobsInGrass.debug("Invalid or unregistered passenger attempted to set on: " + identifier);
-            MobsInGrass.debug("Use: only existing mobs IDs that are defined, case-sensitive, and they must be above the 'vehicle' mob in the file.");
-            MobsInGrass.disable();
+            MobsInGrass.disable("Use: only existing mobs IDs that are defined, case-sensitive, and they must be above the 'vehicle' mob in the file.");
             return;
         }
         this.passengers.add(in);
@@ -199,6 +198,7 @@ public class CustomMob {
             ((Zombie)mob).setBaby(baby);
         }
         if(tags != null) {
+            NamespacedKey TAGS = new NamespacedKey(MobsInGrass.instance(),"Tags");
             mob.getPersistentDataContainer().set(TAGS, PersistentDataType.STRING, tags);
         }
         recursionCounter++;

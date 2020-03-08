@@ -1,6 +1,7 @@
 package net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
+import org.bukkit.Location;
 
 import java.util.HashMap;
 
@@ -9,12 +10,17 @@ public class ZoneProvider {
 
     private static HashMap<String, CustomZone> registeredZones = new HashMap<>();
 
-    public static CustomZone getById(String id){
-        return registeredZones.getOrDefault(id.toUpperCase(), null);
+    public static CustomZone getByRegionAndId(String region, String id){
+        return registeredZones.getOrDefault((region+id).toUpperCase(), null);
+    }
+
+    public static CustomZone getByLocation(Location loc){
+        //todo
+        return null;
     }
 
     public static void register(String id, CustomZone zone){
-        registeredZones.put(id.toUpperCase(), zone);
+        registeredZones.put(id, zone);
     }
 
     public static boolean hasRegistered(String name){
