@@ -48,7 +48,7 @@ public class CustomZone {
         return this.ID;
     }
 
-    public CustomMob getSpawn(String timeslot){
+    public CustomMob getWeightedSpawn(String timeslot){
         Random random = new Random();
         int totalWeights = 0;
         for(Pair<CustomMob,Integer> each : spawns.getOrDefault(timeslot, new ArrayList<>())){

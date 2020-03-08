@@ -7,11 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MobsInGrass extends JavaPlugin{
-    private static MobsInGrass instance;
     private static boolean disabled = false;
     
     public void onEnable(){
-        instance = this;
         reload();
     }
 
@@ -19,11 +17,11 @@ public class MobsInGrass extends JavaPlugin{
         new FileManager();
         new Listeners();
         new MIGCommand();
-        instance.getLogger().info("MobsInGrass Loaded, v5");
+        instance().getLogger().info("MobsInGrass Loaded, v5");
     }
 
     public static MobsInGrass instance() {
-        return instance;
+        return (MobsInGrass)Bukkit.getPluginManager().getPlugin("MobsInGrass");
     }
 
     public static void disable(String reason){

@@ -4,9 +4,9 @@ public class FileManager {
 
 
     public FileManager(){
+        new TimeManager();
         new MobsManager();
         new ZoneManager();
-        new TimeManager();
-        //new ItemManager();
+        //todo: new ItemManager();
     }
 }

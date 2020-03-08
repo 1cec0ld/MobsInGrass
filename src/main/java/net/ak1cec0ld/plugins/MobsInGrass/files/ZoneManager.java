@@ -1,6 +1,8 @@
 package net.ak1cec0ld.plugins.MobsInGrass.files;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
+import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.CustomMob;
+import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.MobProvider;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.CustomZone;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.ZoneProvider;
 import org.bukkit.configuration.ConfigurationSection;
@@ -60,10 +62,15 @@ public class ZoneManager {
     private void addSpawns(CustomZone zone, ConfigurationSection section){
         for(String each : section.getStringList("spawns")){
             if(!each.matches("^\\w+,\\d+(,[A-Za-z]+)+$")){
-                MobsInGrass.disable("Invalid Spawn format in region " + zone.id() + ": " + each);
+                MobsInGrass.disable("Invalid Spawn format in  " + zone.id() + ": " + each);
                 return;
             }
-
+            String[] split = each.split(",");
+            CustomMob mob = MobProvider.getById(split[0]);
+            if(mob == null){
+                MobsInGrass.disable("Invalid CustomMob added to " + zone.id() + ": " + split[0]);
+            }
+            zone.addSpawn(mob, split.);
         }
     }
 }
