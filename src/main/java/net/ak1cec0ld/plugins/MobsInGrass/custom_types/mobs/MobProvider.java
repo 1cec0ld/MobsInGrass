@@ -17,7 +17,11 @@ public class MobProvider {
         registeredMobs.put(id.toUpperCase(), mob);
     }
 
-    public static String listMobs(){
+    public static boolean hasRegistered(String name){
+        return registeredMobs.containsKey(name);
+    }
+
+    public static String list(){
         MobsInGrass.debug(registeredMobs.keySet().toString());
         return registeredMobs.keySet().toString();
     }

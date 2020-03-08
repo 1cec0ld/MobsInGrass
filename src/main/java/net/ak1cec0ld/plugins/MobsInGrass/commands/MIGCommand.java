@@ -37,7 +37,7 @@ public class MIGCommand implements TabExecutor {
                         MobsInGrass.enable();
                         break;
                     case "list":
-                        sender.sendMessage(MobProvider.listMobs());
+                        sender.sendMessage(MobProvider.list());
                         break;
                     case "time":
                         if(sender instanceof Player) {
