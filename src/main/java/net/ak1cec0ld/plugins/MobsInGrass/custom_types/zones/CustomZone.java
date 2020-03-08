@@ -4,7 +4,6 @@ import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.CustomMob;
 import net.ak1cec0ld.plugins.MobsInGrass.files.TimeManager;
 import org.bukkit.Location;
-import org.javatuples.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +38,7 @@ public class CustomZone {
                 return;
             }
             List<Pair<CustomMob,Integer>> spawnsOfSlot = spawns.getOrDefault(eachSlot, new ArrayList<>());
-            spawnsOfSlot.add(Pair.with(mob, weight));
+            spawnsOfSlot.add(new Pair<>(mob, weight));
             spawns.put(eachSlot,spawnsOfSlot);
         }
     }
@@ -67,5 +66,19 @@ public class CustomZone {
         return loc.getX() >= x && loc.getX() <= x+dx &&
                loc.getY() >= y && loc.getY() <= y+dy &&
                loc.getZ() >= z && loc.getZ() <= z+dz;
+    }
+    private class Pair<T,K> {
+        T one;
+        K two;
+        Pair(T one, K two){
+            this.one = one;
+            this.two = two;
+        }
+        T getValue0(){
+            return this.one;
+        }
+        K getValue1(){
+            return this.two;
+        }
     }
 }

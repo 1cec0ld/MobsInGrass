@@ -2,6 +2,9 @@ package net.ak1cec0ld.plugins.MobsInGrass.listeners;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.MobProvider;
+import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.CustomZone;
+import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.ZoneProvider;
+import net.ak1cec0ld.plugins.MobsInGrass.files.TimeManager;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -32,8 +35,9 @@ public class PlayerMove implements Listener{
         int playerRoll = r.nextInt(100)+1;
         if (10 < playerRoll)return;                            //todo: pull 10 from the attract/repel level
 
-
-        MobProvider.random().spawn(player.getLocation());
+        CustomZone zone = ZoneProvider.getByLocation(player.getLocation());
+        if(zone == null)return;
+        zone.getWeightedSpawn(TimeManager.fromServerTime(player.getWorld().getTime())).spawn(player.getLocation());
     }
 
    private boolean sameSpot(Location from, Location to){

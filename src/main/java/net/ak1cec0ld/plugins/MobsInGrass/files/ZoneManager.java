@@ -8,6 +8,8 @@ import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.ZoneProvider;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.util.Arrays;
+
 public class ZoneManager {
 
     private static CustomYMLStorage yml;
@@ -37,11 +39,11 @@ public class ZoneManager {
     private void initialize(){
         ConfigurationSection allGenerations = storage.getConfigurationSection("zones");
         for(String region : allGenerations.getKeys(false)){
-            ConfigurationSection allZones = allGenerations.getConfigurationSection("region");
+            ConfigurationSection allZones = allGenerations.getConfigurationSection(region);
             for(String zone : allZones.getKeys(false)){
                 String id = (region+zone).toUpperCase();
                 CustomZone newZone = createCustomZone(id, allZones.getConfigurationSection(zone));
-                addSpawns(newZone, allZones.getConfigurationSection(zone));
+                newZone = addSpawns(newZone, allZones.getConfigurationSection(zone));
 
 
 
@@ -59,18 +61,20 @@ public class ZoneManager {
         intake[5] = zoneSection.getInt("dz",0);
         return new CustomZone(id,intake);
     }
-    private void addSpawns(CustomZone zone, ConfigurationSection section){
+    private CustomZone addSpawns(CustomZone zone, ConfigurationSection section){
+        CustomZone zoneCopy = zone;
         for(String each : section.getStringList("spawns")){
             if(!each.matches("^\\w+,\\d+(,[A-Za-z]+)+$")){
                 MobsInGrass.disable("Invalid Spawn format in  " + zone.id() + ": " + each);
-                return;
+                return null;
             }
             String[] split = each.split(",");
             CustomMob mob = MobProvider.getById(split[0]);
             if(mob == null){
                 MobsInGrass.disable("Invalid CustomMob added to " + zone.id() + ": " + split[0]);
             }
-            zone.addSpawn(mob, split.);
+            zoneCopy.addSpawn(mob, Arrays.copyOfRange(split,2,split.length), Integer.parseInt(split[1]));
         }
+        return zoneCopy;
     }
 }

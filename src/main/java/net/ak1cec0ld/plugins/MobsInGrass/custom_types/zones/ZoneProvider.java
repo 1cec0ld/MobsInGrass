@@ -15,7 +15,9 @@ public class ZoneProvider {
     }
 
     public static CustomZone getByLocation(Location loc){
-        //todo
+        for(CustomZone each : registeredZones.values()){
+            if(each.inZone(loc))return each;
+        }
         return null;
     }
 
