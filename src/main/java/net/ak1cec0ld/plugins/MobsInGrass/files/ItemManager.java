@@ -11,5 +11,25 @@ public class ItemManager {
         yml = new CustomYMLStorage(MobsInGrass.instance(),"Items.yml","MobsInGrass");
         storage = yml.getYamlConfiguration();
         yml.save();
+
+        initialize();
     }
+    /*
+      items:
+        attract:
+          ==: org.bukkit.inventory.ItemStack
+          type: POTION
+         meta:
+            ==: ItemMeta
+            meta-type: UNSPECIFIC
+            display-name: §2Attract
+            lore:
+            - §An elixir that increases wild
+            - §2encounters when drunk.
+    */
+
+    private void initialize(){
+
+    }
+
 }
