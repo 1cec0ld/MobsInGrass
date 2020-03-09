@@ -62,7 +62,6 @@ public class ZoneManager {
         return new CustomZone(id,intake);
     }
     private CustomZone addSpawns(CustomZone zone, ConfigurationSection section){
-        CustomZone zoneCopy = zone;
         for(String each : section.getStringList("spawns")){
             if(!each.matches("^\\w+,\\d+(,[A-Za-z]+)+$")){
                 MobsInGrass.disable("Invalid Spawn format in  " + zone.id() + ": " + each);
@@ -73,8 +72,8 @@ public class ZoneManager {
             if(mob == null){
                 MobsInGrass.disable("Invalid CustomMob added to " + zone.id() + ": " + split[0]);
             }
-            zoneCopy.addSpawn(mob, Arrays.copyOfRange(split,2,split.length), Integer.parseInt(split[1]));
+            zone.addSpawn(mob, Arrays.copyOfRange(split,2,split.length), Integer.parseInt(split[1]));
         }
-        return zoneCopy;
+        return zone;
     }
 }

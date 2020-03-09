@@ -1,12 +1,14 @@
 package net.ak1cec0ld.plugins.MobsInGrass.listeners;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
+import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.CustomMob;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.MobProvider;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.CustomZone;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.ZoneProvider;
 import net.ak1cec0ld.plugins.MobsInGrass.files.TimeManager;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,7 +39,12 @@ public class PlayerMove implements Listener{
 
         CustomZone zone = ZoneProvider.getByLocation(player.getLocation());
         if(zone == null)return;
-        zone.getWeightedSpawn(TimeManager.fromServerTime(player.getWorld().getTime())).spawn(player.getLocation());
+        CustomMob mob = zone.getWeightedSpawn(TimeManager.fromServerTime(player.getWorld().getTime()));
+        Material typeIn = player.getLocation().getBlock().getType();
+        Material typeOn = player.getLocation().getBlock().getType();
+        if(!mob.spawnsIn(typeIn)  && !mob.spawnsOn(typeOn))return;
+
+        mob.spawn(player.getLocation());
     }
 
    private boolean sameSpot(Location from, Location to){

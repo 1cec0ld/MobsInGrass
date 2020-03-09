@@ -3,14 +3,14 @@ package net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs;
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class CustomMob {
     private static final double FAKE_NULL = Double.MIN_NORMAL;
@@ -41,6 +41,9 @@ public class CustomMob {
     private List<CustomMob> passengers;
     private String tags;
     private String announcement;
+    private Set<Material> inBlocks;
+    private Set<Material> onBlocks;
+    private HashMap<String, ItemStack> items;
 
 
 
@@ -48,6 +51,9 @@ public class CustomMob {
         this.identifier = id;
         this.entityType = entityType;
         this.passengers = new ArrayList<>();
+        this.inBlocks = new HashSet<>();
+        this.onBlocks = new HashSet<>();
+        this.items = new HashMap<>();
     }
 
     public String getIdentifier(){
@@ -125,6 +131,9 @@ public class CustomMob {
                 MobsInGrass.disable("Use: absorption,armor,armorToughness,attackDamage,attackSpeed,flyingSpeed,knockbackResist,maxHealth,movementSpeed");
         }
     }
+    public void addItem(String type, ItemStack item){
+        items.put(type, item);
+    }
     public void addPassenger(CustomMob in){
         if(in == null){
             MobsInGrass.debug("Invalid or unregistered passenger attempted to set on: " + identifier);
@@ -132,6 +141,12 @@ public class CustomMob {
             return;
         }
         this.passengers.add(in);
+    }
+    public void addInMaterial(Material spawnIn){
+        inBlocks.add(spawnIn);
+    }
+    public void addOnMaterial(Material spawnIn){
+        onBlocks.add(spawnIn);
     }
     public void setTags(String in){
         tags = in;
@@ -160,6 +175,14 @@ public class CustomMob {
         }
     }
 
+    public boolean spawnsIn(Material check){
+        return inBlocks.contains(check) ||
+              (inBlocks.isEmpty() && check.equals(Material.GRASS));
+    }
+    public boolean spawnsOn(Material check){
+        return onBlocks.contains(check);
+    }
+
     private void announce(Location where, double howFarAway) {
         if(announcement == null) return;
         for (Entity each : Objects.requireNonNull(where.getWorld()).getNearbyEntities(where, howFarAway, howFarAway, howFarAway)) {
@@ -169,6 +192,7 @@ public class CustomMob {
 
     private void applyMobStats(Mob mob){
         applyAttributes(mob);
+        applyItems(mob);
 
         mob.setAware(aware);
         mob.setGlowing(glowing);
@@ -234,6 +258,26 @@ public class CustomMob {
         }
         if(movementSpeed != FAKE_NULL && mob.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED) != null){
             Objects.requireNonNull(mob.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).setBaseValue(armor);
+        }
+    }
+    private void applyItems(Mob mob){
+        if(items.containsKey("helmet")) {
+            mob.getEquipment().setHelmet(items.get("helmet"));
+        }
+        if(items.containsKey("chestplate")) {
+            mob.getEquipment().setChestplate(items.get("chestplate"));
+        }
+        if(items.containsKey("leggings")) {
+            mob.getEquipment().setLeggings(items.get("leggings"));
+        }
+        if(items.containsKey("boots")) {
+            mob.getEquipment().setBoots(items.get("boots"));
+        }
+        if(items.containsKey("mainhand")) {
+            mob.getEquipment().setItemInMainHand(items.get("mainhand"));
+        }
+        if(items.containsKey("offhand")) {
+            mob.getEquipment().setItemInOffHand(items.get("offhand"));
         }
     }
 }

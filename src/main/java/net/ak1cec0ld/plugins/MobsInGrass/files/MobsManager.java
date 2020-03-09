@@ -3,12 +3,14 @@ package net.ak1cec0ld.plugins.MobsInGrass.files;
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.CustomMob;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.MobProvider;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class MobsManager {
 
@@ -54,6 +56,8 @@ public class MobsManager {
         ##        - ID1
         ##        - ID2...etc
         ##        - Note, these must be defined ABOVE this point!
+        ##    in-blocks: Material,Material,Material
+        ##    on-blocks: Material,Material,Material
      */
 
     private void initialize(){
@@ -88,15 +92,37 @@ public class MobsManager {
             }
             creating.setTags(section.getString("tags", null));
             creating.setAnnouncement(section.getString("announcement",null));
+            for(String each : (section.getString("in-blocks","").split(","))){
+                try{
+                    Material in = Material.valueOf(each);
+                    creating.addInMaterial(in);
+                }catch(IllegalArgumentException ignored){}
+            }
+            for(String each : (section.getString("on-blocks","").split(","))){
+                try{
+                    Material in = Material.valueOf(each);
+                    creating.addOnMaterial(in);
+                }catch(IllegalArgumentException ignored){}
+            }
+            ConfigurationSection items = section.getConfigurationSection("items");
+            if(items != null){
+                setItems(creating,items);
+            }
             return creating;
         }catch(NullPointerException e){
             MobsInGrass.disable("No entityType found for: " + id + ", this is case sensitive \"entityType\".");
             return null;
         }
     }
+    private void setItems(CustomMob mob, ConfigurationSection items){
+        final List<String> valid = Arrays.asList("helmet","chestplate","leggings","boots","mainhand","offhand");
+        for(String each : items.getKeys(false)){
+            if(valid.contains(each)){
+                mob.addItem(each,items.getItemStack(each));
+            } else {
+                MobsInGrass.debug("Invalid equipment slot named: " + each);
+            }
+        }
 
-    public static void reload(){
-        yml.reload();
-        storage = yml.getYamlConfiguration();
     }
 }
