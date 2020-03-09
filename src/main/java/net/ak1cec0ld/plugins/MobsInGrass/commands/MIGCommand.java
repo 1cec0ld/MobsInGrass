@@ -2,9 +2,7 @@ package net.ak1cec0ld.plugins.MobsInGrass.commands;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.MobProvider;
-import net.ak1cec0ld.plugins.MobsInGrass.files.MobsManager;
 import net.ak1cec0ld.plugins.MobsInGrass.files.TimeManager;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -28,7 +26,9 @@ public class MIGCommand implements TabExecutor {
             case 1:
                 switch (args[0].toLowerCase()){
                     case "reload":
+                        sender.sendMessage("Reloading MobsInGrass...");
                         MobsInGrass.reload();
+                        sender.sendMessage("Reloaded!");
                         break;
                     case "disable":
                         MobsInGrass.disable("Operator Command");
@@ -36,7 +36,7 @@ public class MIGCommand implements TabExecutor {
                     case "enable":
                         MobsInGrass.enable();
                         break;
-                    case "list":
+                    case "listmobs":
                         sender.sendMessage(MobProvider.list());
                         break;
                     case "time":
@@ -46,31 +46,6 @@ public class MIGCommand implements TabExecutor {
                         break;
                     default:
                         help(sender);
-                }
-                break;
-            case 2:
-                if (StringUtils.containsIgnoreCase(args[0], "search")){
-                } else {
-                    help(sender);
-                }
-                break;
-            case 3:
-                if (args[0].equalsIgnoreCase("remove")){
-                } else {
-                    help(sender);
-                }
-                break;
-            case 4:
-                if (args[0].equalsIgnoreCase("remove")){
-                } else if (args[0].equalsIgnoreCase("add")){
-                } else {
-                    help(sender);
-                }
-                break;
-            case 5:
-                if (args[0].equalsIgnoreCase("add")){
-                } else {
-                    help(sender);
                 }
                 break;
         }
@@ -87,13 +62,6 @@ public class MIGCommand implements TabExecutor {
             sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"MobsInGrass is disabled! Check the config and console!");
         }
         sender.sendMessage(ChatColor.AQUA+  "Version: 5");
-        sender.sendMessage(ChatColor.GREEN+ "/MiG <reload,help,disable,enable,list>");
+        sender.sendMessage(ChatColor.GREEN+ "/MiG <reload,help,disable,enable,listmobs>");
     }
 }
-/*
- *  /mig reload
- *  /mig blocks TALLGRASS
- *  /mig mobs ZOMBIE
- *  /mig TALLGRASS ZOMBIE 5
- *  /mig TALLGRASS route1 ZOMBIE
- */

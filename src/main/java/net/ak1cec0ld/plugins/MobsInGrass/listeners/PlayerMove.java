@@ -6,6 +6,7 @@ import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.MobProvider;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.CustomZone;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.ZoneProvider;
 import net.ak1cec0ld.plugins.MobsInGrass.files.TimeManager;
+import org.apache.commons.lang.ObjectUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -41,9 +42,10 @@ public class PlayerMove implements Listener{
         CustomZone zone = ZoneProvider.getByLocation(player.getLocation());
         if(zone == null)return;
         CustomMob mob = zone.getWeightedSpawn(TimeManager.fromServerTime(player.getWorld().getTime()));
+        if(mob == null)return;
         Material typeIn = player.getLocation().getBlock().getType();
         Material typeOn = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
-        if(!mob.spawnsIn(typeIn)  && !mob.spawnsOn(typeOn))return;
+        if (!mob.spawnsIn(typeIn) && !mob.spawnsOn(typeOn)) return;
 
         mob.spawn(player.getLocation());
     }

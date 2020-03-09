@@ -200,6 +200,7 @@ public class CustomMob {
     private void applyMobStats(Mob mob){
         applyAttributes(mob);
         applyItems(mob);
+        applyPotionEffects(mob);
 
         mob.setAware(aware);
         mob.setGlowing(glowing);
