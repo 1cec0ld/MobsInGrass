@@ -9,6 +9,7 @@ import net.ak1cec0ld.plugins.MobsInGrass.files.TimeManager;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,7 +42,7 @@ public class PlayerMove implements Listener{
         if(zone == null)return;
         CustomMob mob = zone.getWeightedSpawn(TimeManager.fromServerTime(player.getWorld().getTime()));
         Material typeIn = player.getLocation().getBlock().getType();
-        Material typeOn = player.getLocation().getBlock().getType();
+        Material typeOn = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
         if(!mob.spawnsIn(typeIn)  && !mob.spawnsOn(typeOn))return;
 
         mob.spawn(player.getLocation());

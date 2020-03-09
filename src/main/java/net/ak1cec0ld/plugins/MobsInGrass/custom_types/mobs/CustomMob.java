@@ -9,6 +9,8 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
 
@@ -44,6 +46,7 @@ public class CustomMob {
     private Set<Material> inBlocks;
     private Set<Material> onBlocks;
     private HashMap<String, ItemStack> items;
+    private Set<PotionEffect> potionEffects;
 
 
 
@@ -54,6 +57,7 @@ public class CustomMob {
         this.inBlocks = new HashSet<>();
         this.onBlocks = new HashSet<>();
         this.items = new HashMap<>();
+        this.potionEffects = new HashSet<>();
     }
 
     public String getIdentifier(){
@@ -147,6 +151,9 @@ public class CustomMob {
     }
     public void addOnMaterial(Material spawnIn){
         onBlocks.add(spawnIn);
+    }
+    public void addPotionEffect(PotionEffect effect){
+        potionEffects.add(effect);
     }
     public void setTags(String in){
         tags = in;
@@ -278,6 +285,11 @@ public class CustomMob {
         }
         if(items.containsKey("offhand")) {
             mob.getEquipment().setItemInOffHand(items.get("offhand"));
+        }
+    }
+    private void applyPotionEffects(Mob mob){
+        for(PotionEffect each : potionEffects){
+            mob.addPotionEffect(each);
         }
     }
 }

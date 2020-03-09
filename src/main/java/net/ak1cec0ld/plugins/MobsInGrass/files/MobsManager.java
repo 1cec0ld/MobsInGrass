@@ -7,6 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,11 +55,34 @@ public class MobsManager {
         ##    announcement: {&4string}
         ##    tags: {string1,string2,string3,string4} Note, these will eventually determine mob powers
         ##    passengers:
-        ##        - ID1
-        ##        - ID2...etc
-        ##        - Note, these must be defined ABOVE this point!
+        ##      - ID1
+        ##      - ID2...etc
+        ##      - Note, these must be defined ABOVE this point!
         ##    in-blocks: Material,Material,Material
         ##    on-blocks: Material,Material,Material
+        ##    items:
+        ##      mainhand:
+        ##        ==: org.bukkit.inventory.ItemStack
+        ##        type: DIAMOND_SWORD
+        ##        damage: 1500
+        ##        amount: 1
+        ##       meta:
+        ##          ==: ItemMeta
+        ##          meta-type: UNSPECIFIC
+        ##          display-name: §6Sample Item
+        ##          lore:
+        ##          - First line of lore
+        ##          - Second line of lore
+        ##          - §1Color §2support
+        ##          enchants:
+        ##            DAMAGE_ALL: 2
+        ##            KNOCKBACK: 7
+        ##            FIRE_ASPECT: 1
+        ##    potions:
+        ##      myPotionName1:
+        ##        type: regeneration
+        ##        duration: 999999
+        ##        amplifier: 1
      */
 
     private void initialize(){
@@ -108,6 +133,10 @@ public class MobsManager {
             if(items != null){
                 setItems(creating,items);
             }
+            ConfigurationSection effects = section.getConfigurationSection("potions");
+            if(effects != null){
+                setPotionEffects(creating,effects);
+            }
             return creating;
         }catch(NullPointerException e){
             MobsInGrass.disable("No entityType found for: " + id + ", this is case sensitive \"entityType\".");
@@ -123,6 +152,14 @@ public class MobsManager {
                 MobsInGrass.debug("Invalid equipment slot named: " + each);
             }
         }
-
+    }
+    private void setPotionEffects(CustomMob mob, ConfigurationSection potions){
+        for(String each : potions.getKeys(false)){
+            PotionEffectType type = PotionEffectType.getByName(potions.getString(each+".type").toUpperCase());
+            if(type==null)return;
+            int duration = potions.getInt(each+".duration", 999999);
+            int amplifier = potions.getInt(each+".amplifier", 1);
+            mob.addPotionEffect(new PotionEffect(type, duration, amplifier, false, false));
+        }
     }
 }
