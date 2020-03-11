@@ -48,27 +48,27 @@ public class ItemManager {
         ConfigurationSection items = storage.getConfigurationSection("items");
         for(String eachPotion : items.getKeys(false)){
             MobsInGrass.debug("Registering " + eachPotion);
-            String displayName = items.getString(eachPotion+"displayname");
+            String displayName = items.getString(eachPotion+".displayname");
             if(displayName == null){
                 MobsInGrass.debug("Error in collecting displayname");
                 return;
             }
-            String lore = items.getString(eachPotion+"lore");
+            String lore = items.getString(eachPotion+".lore");
             if(lore == null){
                 MobsInGrass.debug("Error in collecting lore");
                 return;
             }
             CustomItem item = new CustomItem(displayName.replace('&', ChatColor.COLOR_CHAR), lore.replace('&',ChatColor.COLOR_CHAR));
-            double power = items.getDouble(eachPotion+"power-multiplier", DEFAULT_POWER_MULTIPLIER);
+            double power = items.getDouble(eachPotion+".power-multiplier", DEFAULT_POWER_MULTIPLIER);
             item.setPower(power);
-            int duration = items.getInt(eachPotion+"duration", DEFAULT_DURATION);
+            int duration = items.getInt(eachPotion+".duration", DEFAULT_DURATION);
             item.setDuration(duration);
-            Color color = items.getColor(eachPotion+"color", null);
+            Color color = items.getColor(eachPotion+".color", null);
             if(color != null){
                 item.setColor(color);
             }
             try {
-                Material material = Material.valueOf(items.getString(eachPotion+"material").toUpperCase());
+                Material material = Material.valueOf(items.getString(eachPotion+".material").toUpperCase());
                 item.setMaterial(material);
             } catch (IllegalArgumentException | NullPointerException ignored){
                 MobsInGrass.debug("Material invalid");
