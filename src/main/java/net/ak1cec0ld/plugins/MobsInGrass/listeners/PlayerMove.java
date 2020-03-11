@@ -16,6 +16,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Random;
@@ -42,7 +44,9 @@ public class PlayerMove implements Listener{
 
         Player player = event.getPlayer();
         int playerRoll = r.nextInt(100)+1;
-        if (10 < playerRoll)return;                            //todo: pull 10 from the attract/repel level
+        double multiplier = getMultiplier(event.getPlayer());
+        MobsInGrass.debug(multiplier+"");
+        if (8 * multiplier < playerRoll)return;
 
         CustomZone zone = ZoneProvider.getByLocation(player.getLocation());
         if(zone == null)return;
@@ -55,10 +59,13 @@ public class PlayerMove implements Listener{
         Bukkit.getScheduler().runTaskLater(MobsInGrass.instance(), () -> mob.spawn(player.getLocation()), 20L);
     }
 
-   private boolean sameSpot(Location from, Location to){
+    private boolean sameSpot(Location from, Location to){
         return from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ();
-   }
-
+    }
+    private double getMultiplier(Player player){
+        PersistentDataContainer container = player.getPersistentDataContainer();
+        return container.getOrDefault(Listeners.getModifierTag(), PersistentDataType.DOUBLE, 1.0);
+    }
    
 
 }
