@@ -3,6 +3,7 @@ package net.ak1cec0ld.plugins.MobsInGrass.files;
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.items.CustomItem;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.items.ItemProvider;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -57,7 +58,7 @@ public class ItemManager {
                 MobsInGrass.debug("Error in collecting lore");
                 return;
             }
-            CustomItem item = new CustomItem(displayName, lore);
+            CustomItem item = new CustomItem(displayName.replace('&', ChatColor.COLOR_CHAR), lore.replace('&',ChatColor.COLOR_CHAR));
             double power = items.getDouble("power-multiplier", DEFAULT_POWER_MULTIPLIER);
             item.setPower(power);
             int duration = items.getInt("duration", DEFAULT_DURATION);
