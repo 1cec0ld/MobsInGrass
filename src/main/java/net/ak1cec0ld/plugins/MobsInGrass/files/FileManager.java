@@ -7,6 +7,6 @@ public class FileManager {
         new TimeManager();
         new MobsManager();
         new ZoneManager();
-        //todo: new ItemManager();
+        new ItemManager();
     }
 }
