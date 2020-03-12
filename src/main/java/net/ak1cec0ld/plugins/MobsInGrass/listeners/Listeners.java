@@ -10,6 +10,8 @@ public class Listeners {
 
     public Listeners(){
         new PlayerMove();
+        new PlayerConsume();
+        new PlayerJoin();
     }
 
     public static NamespacedKey getModifierTag(){

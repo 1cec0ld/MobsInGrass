@@ -1,7 +1,9 @@
 package net.ak1cec0ld.plugins.MobsInGrass.custom_types.items;
 
+import org.bukkit.ChatColor;
+
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
 
 public class ItemProvider {
 
@@ -9,14 +11,21 @@ public class ItemProvider {
 
 
     public static void register(String id, CustomItem item){
-        registeredItems.put(id,item);
+        registeredItems.put(ChatColor.stripColor(id),item);
     }
 
     public static CustomItem getByDisplayName(String name){
-        for(Map.Entry<String,CustomItem> each : registeredItems.entrySet()){
-            if(each.getValue().getDisplayName().equalsIgnoreCase(name.replace(' ', '_')))return each.getValue();
+        String replaced = ChatColor.stripColor(name.replace(' ','_'));
+        for(CustomItem each : registeredItems.values()){
+            if(ChatColor.stripColor(each.getDisplayName()).replace(' ','_').equalsIgnoreCase(replaced)){
+                return each;
+            }
         }
         return null;
+    }
+
+    public static Set<String> getAllRegisteredNames(){
+        return registeredItems.keySet();
     }
 
 }

@@ -43,9 +43,8 @@ public class PlayerMove implements Listener{
         if (sameSpot(from,to))return;
 
         Player player = event.getPlayer();
-        int playerRoll = r.nextInt(100)+1;
+        int playerRoll = r.nextInt(100);
         double multiplier = getMultiplier(event.getPlayer());
-        MobsInGrass.debug(multiplier+"");
         if (8 * multiplier < playerRoll)return;
 
         CustomZone zone = ZoneProvider.getByLocation(player.getLocation());

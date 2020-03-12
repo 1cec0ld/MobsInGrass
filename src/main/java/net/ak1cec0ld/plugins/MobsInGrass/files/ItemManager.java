@@ -1,6 +1,7 @@
 package net.ak1cec0ld.plugins.MobsInGrass.files;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
+import net.ak1cec0ld.plugins.MobsInGrass.custom_types.ColorProvider;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.items.CustomItem;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.items.ItemProvider;
 import org.bukkit.ChatColor;
@@ -33,7 +34,7 @@ public class ItemManager {
           color: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Color.html
         superattract:
           displayname: &bAttract
-          lore: &bAn elixier that increases wild|&bencounters when drunk.|&bLasts longer than an Attract.
+          lore: &bAn elixir that increases wild|&bencounters when drunk.|&bLasts longer than an Attract.
           power-multiplier: 1.3
           duration: 150
           color: AQUA
@@ -53,27 +54,37 @@ public class ItemManager {
                 MobsInGrass.debug("Error in collecting displayname");
                 return;
             }
+            displayName = displayName.replace('&', ChatColor.COLOR_CHAR);
             String lore = items.getString(eachPotion+".lore");
             if(lore == null){
                 MobsInGrass.debug("Error in collecting lore");
                 return;
             }
-            CustomItem item = new CustomItem(displayName.replace('&', ChatColor.COLOR_CHAR), lore.replace('&',ChatColor.COLOR_CHAR));
+            lore = lore.replace('&',ChatColor.COLOR_CHAR);
+
+            CustomItem item = new CustomItem(displayName, lore);
             double power = items.getDouble(eachPotion+".power-multiplier", DEFAULT_POWER_MULTIPLIER);
             item.setPower(power);
             int duration = items.getInt(eachPotion+".duration", DEFAULT_DURATION);
             item.setDuration(duration);
-            Color color = items.getColor(eachPotion+".color", null);
+            String color = items.getString(eachPotion+".color");
             if(color != null){
-                item.setColor(color);
+                Color translated = ColorProvider.fromString(color);
+                if(translated != null) {
+                    item.setColor(translated);
+                }
             }
-            try {
-                Material material = Material.valueOf(items.getString(eachPotion+".material").toUpperCase());
-                item.setMaterial(material);
-            } catch (IllegalArgumentException | NullPointerException ignored){
-                MobsInGrass.debug("Material invalid");
+            String mat = items.getString(eachPotion+".material");
+            if(mat != null) {
+                try {
+                    Material material = Material.valueOf(mat.toUpperCase());
+                    item.setMaterial(material);
+                } catch (IllegalArgumentException ignored) {
+                    MobsInGrass.debug("Material invalid");
+                }
             }
-            ItemProvider.register(displayName, item);
+            ItemProvider.register(displayName.replace(' ','_'), item);
+            yml.save();
         }
     }
 

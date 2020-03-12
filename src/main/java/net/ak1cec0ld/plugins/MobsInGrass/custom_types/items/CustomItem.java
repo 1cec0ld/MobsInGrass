@@ -1,6 +1,7 @@
 package net.ak1cec0ld.plugins.MobsInGrass.custom_types.items;
 
 
+import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +23,7 @@ public class CustomItem {
         item = new ItemStack(Material.POTION, 1);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(displayname);
-        meta.setLore(Arrays.asList(lore.split("|")));
+        meta.setLore(Arrays.asList(lore.split("\\|")));
 
         item.setItemMeta(meta);
     }
@@ -55,6 +56,8 @@ public class CustomItem {
             PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
             potionMeta.setColor(color);
             item.setItemMeta(potionMeta);
+        } else {
+            MobsInGrass.debug("No PotionMeta Found");
         }
     }
 }

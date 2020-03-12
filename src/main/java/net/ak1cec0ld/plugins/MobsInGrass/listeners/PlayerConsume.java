@@ -14,6 +14,9 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class PlayerConsume implements Listener {
 
+    public PlayerConsume(){
+        MobsInGrass.instance().getServer().getPluginManager().registerEvents(this, MobsInGrass.instance());
+    }
 
     @EventHandler
     public void onPlayerConsume(PlayerItemConsumeEvent event){
@@ -28,12 +31,14 @@ public class PlayerConsume implements Listener {
     private double getModifier(ItemStack item){
         ItemMeta meta = item.getItemMeta();
         if(meta == null)return 1.0;
+        MobsInGrass.debug("Drunk item has meta");
         if(!meta.hasDisplayName())return 1.0;
+        MobsInGrass.debug("Meta has displayname:" + meta.getDisplayName());
 
         String itemName = meta.getDisplayName();
         CustomItem customItem = ItemProvider.getByDisplayName(itemName);
         if(customItem == null)return 1.0;
-
+        MobsInGrass.debug("customItem.getpower: "+customItem.getPower());
         return customItem.getPower();
     }
 
