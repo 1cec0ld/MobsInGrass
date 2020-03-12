@@ -2,11 +2,9 @@ package net.ak1cec0ld.plugins.MobsInGrass.listeners;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.CustomMob;
-import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.MobProvider;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.CustomZone;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.ZoneProvider;
 import net.ak1cec0ld.plugins.MobsInGrass.files.TimeManager;
-import org.apache.commons.lang.ObjectUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -18,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Random;
 
@@ -51,11 +48,11 @@ public class PlayerMove implements Listener{
         if(zone == null)return;
         CustomMob mob = zone.getWeightedSpawn(TimeManager.fromServerTime(player.getWorld().getTime()));
         if(mob == null)return;
-        Material typeIn = player.getLocation().getBlock().getType();
-        Material typeOn = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
-        if (!mob.spawnsIn(typeIn) && !mob.spawnsOn(typeOn)) return;
+        Material typeIn = to.getBlock().getType();
+        Material typeOn = to.getBlock().getRelative(BlockFace.DOWN).getType();
+        if (!mob.spawnsIn(typeIn) && !mob.spawnsOn(typeOn))return;
 
-        Bukkit.getScheduler().runTaskLater(MobsInGrass.instance(), () -> mob.spawn(player.getLocation()), 20L);
+        Bukkit.getScheduler().runTaskLater(MobsInGrass.instance(), () -> mob.spawn(to), 20L);
     }
 
     private boolean sameSpot(Location from, Location to){
