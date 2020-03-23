@@ -27,9 +27,6 @@ public class PlayerMove implements Listener{
         MobsInGrass.instance().getServer().getPluginManager().registerEvents(this, MobsInGrass.instance());
     }
 
-    private static void run() {
-    }
-
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event){
         if (MobsInGrass.isDisabled())return;
@@ -41,10 +38,10 @@ public class PlayerMove implements Listener{
 
         Player player = event.getPlayer();
         int playerRoll = r.nextInt(100);
-        double multiplier = getMultiplier(event.getPlayer());
+        double multiplier = getMultiplier(player);
         if (8 * multiplier < playerRoll)return;
 
-        CustomZone zone = ZoneProvider.getByLocation(player.getLocation());
+        CustomZone zone = ZoneProvider.getByLocation(to);
         if(zone == null)return;
         CustomMob mob = zone.getWeightedSpawn(TimeManager.fromServerTime(player.getWorld().getTime()));
         if(mob == null)return;
