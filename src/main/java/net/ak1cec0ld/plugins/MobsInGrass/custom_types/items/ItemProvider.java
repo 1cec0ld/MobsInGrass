@@ -1,6 +1,7 @@
 package net.ak1cec0ld.plugins.MobsInGrass.custom_types.items;
 
 import org.bukkit.ChatColor;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -18,6 +19,15 @@ public class ItemProvider {
         String replaced = ChatColor.stripColor(name.replace(' ','_'));
         for(CustomItem each : registeredItems.values()){
             if(ChatColor.stripColor(each.getDisplayName()).replace(' ','_').equalsIgnoreCase(replaced)){
+                return each;
+            }
+        }
+        return null;
+    }
+
+    public static CustomItem getByItemStack(ItemStack item){
+        for(CustomItem each : registeredItems.values()){
+            if(item.isSimilar(each.getItem())){
                 return each;
             }
         }
