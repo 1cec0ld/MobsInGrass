@@ -2,6 +2,9 @@ package net.ak1cec0ld.plugins.MobsInGrass.listeners;
 
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
+import net.ak1cec0ld.plugins.MobsInGrass.listeners.player.PlayerConsume;
+import net.ak1cec0ld.plugins.MobsInGrass.listeners.player.PlayerJoin;
+import net.ak1cec0ld.plugins.MobsInGrass.listeners.player.PlayerMove;
 import org.bukkit.NamespacedKey;
 
 public class Listeners {

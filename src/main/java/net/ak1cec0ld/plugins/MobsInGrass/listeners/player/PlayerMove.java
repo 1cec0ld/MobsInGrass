@@ -1,10 +1,11 @@
-package net.ak1cec0ld.plugins.MobsInGrass.listeners;
+package net.ak1cec0ld.plugins.MobsInGrass.listeners.player;
 
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.CustomMob;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.CustomZone;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.ZoneProvider;
 import net.ak1cec0ld.plugins.MobsInGrass.files.TimeManager;
+import net.ak1cec0ld.plugins.MobsInGrass.listeners.Listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -22,6 +23,7 @@ import java.util.Random;
 public class PlayerMove implements Listener{
 
     private static Random r = new Random();
+    private static final int DEFAULT_CHANCE = 8;
 
     public PlayerMove(){
         MobsInGrass.instance().getServer().getPluginManager().registerEvents(this, MobsInGrass.instance());
@@ -39,7 +41,7 @@ public class PlayerMove implements Listener{
         Player player = event.getPlayer();
         int playerRoll = r.nextInt(100);
         double multiplier = getMultiplier(player);
-        if (8 * multiplier < playerRoll)return;
+        if (DEFAULT_CHANCE * multiplier < playerRoll)return;
 
         CustomZone zone = ZoneProvider.getByLocation(to);
         if(zone == null)return;

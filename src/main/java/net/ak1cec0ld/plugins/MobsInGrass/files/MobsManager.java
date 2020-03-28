@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -146,7 +147,10 @@ public class MobsManager {
         final List<String> valid = Arrays.asList("helmet","chestplate","leggings","boots","mainhand","offhand");
         for(String each : items.getKeys(false)){
             if(valid.contains(each)){
-                mob.addItem(each,items.getItemStack(each));
+                ItemStack item = items.getItemStack(each);
+                if(item != null){
+                    mob.addItem(each,item);
+                }
             } else {
                 MobsInGrass.debug("Invalid equipment slot named: " + each);
             }

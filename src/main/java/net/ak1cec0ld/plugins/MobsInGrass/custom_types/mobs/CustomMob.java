@@ -9,7 +9,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
