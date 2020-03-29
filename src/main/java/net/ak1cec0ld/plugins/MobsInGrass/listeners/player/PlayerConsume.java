@@ -27,9 +27,9 @@ public class PlayerConsume implements Listener {
         if(item == null)return;
 
         PersistentDataContainer container = event.getPlayer().getPersistentDataContainer();
-        container.set(Listeners.getModifierTag(), PersistentDataType.DOUBLE, getModifier(event.getItem()));
+        container.set(Listeners.getSpawnModifierKey(), PersistentDataType.DOUBLE, getModifier(event.getItem()));
 
-        MobsInGrass.instance().getServer().getScheduler().runTaskLater(MobsInGrass.instance(), () -> container.remove(Listeners.getModifierTag()), getDuration(event.getItem())*20);
+        MobsInGrass.instance().getServer().getScheduler().runTaskLater(MobsInGrass.instance(), () -> container.remove(Listeners.getSpawnModifierKey()), getDuration(event.getItem())*20);
     }
 
     private double getModifier(ItemStack item){

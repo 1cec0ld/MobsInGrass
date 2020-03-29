@@ -59,7 +59,7 @@ public class PlayerMove implements Listener{
     }
     private double getMultiplier(Player player){
         PersistentDataContainer container = player.getPersistentDataContainer();
-        return container.getOrDefault(Listeners.getModifierTag(), PersistentDataType.DOUBLE, 1.0);
+        return container.getOrDefault(Listeners.getSpawnModifierKey(), PersistentDataType.DOUBLE, 1.0);
     }
    
 

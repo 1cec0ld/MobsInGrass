@@ -17,7 +17,7 @@ public class Listeners {
         new PlayerJoin();
     }
 
-    public static NamespacedKey getModifierTag(){
+    public static NamespacedKey getSpawnModifierKey(){
         return SPAWN_FREQUENCY_MODIFIER;
     }
 }
