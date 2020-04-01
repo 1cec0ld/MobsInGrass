@@ -9,7 +9,7 @@ public class AbilityProvider {
         registeredAbilities.put(ability.getId(), ability);
     }
 
-    public Ability getById(String id){
+    public Ability getByTag(String id){
         return registeredAbilities.getOrDefault(id, null);
     }
 }

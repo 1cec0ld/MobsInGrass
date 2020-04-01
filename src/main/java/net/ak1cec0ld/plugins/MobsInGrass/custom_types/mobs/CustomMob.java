@@ -1,15 +1,19 @@
 package net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs;
 
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity;
 import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
+import net.minecraft.server.v1_15_R1.*;
 
 import java.util.*;
 
@@ -40,7 +44,7 @@ public class CustomMob {
     private double maxHealth = FAKE_NULL;
     private double movementSpeed = FAKE_NULL;
     private List<CustomMob> passengers;
-    private String tags;
+    private String tags = "";
     private String announcement;
     private Set<Material> inBlocks;
     private Set<Material> onBlocks;
@@ -200,7 +204,6 @@ public class CustomMob {
         applyAttributes(mob);
         applyItems(mob);
         applyPotionEffects(mob);
-
         mob.setAware(aware);
         mob.setGlowing(glowing);
         mob.setGravity(gravity);
@@ -239,6 +242,8 @@ public class CustomMob {
             mob.addPassenger(each.getEntity());
         }
         recursionCounter--;
+        net.minecraft.server.v1_15_R1.Entity nmsEnt = ((CraftEntity)mob).getHandle();
+        //NBTEditor.set(mob, getNBTTaglist(tags), "Tags");
     }
     private void applyAttributes(Mob mob){
         if(maxHealth != FAKE_NULL && mob.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null){
@@ -291,5 +296,14 @@ public class CustomMob {
         for(PotionEffect each : potionEffects){
             mob.addPotionEffect(each);
         }
+    }
+
+    private NBTTagList getNBTTaglist(String commaDelimitedList){
+        NBTTagList list = new NBTTagList();
+        for(String each : commaDelimitedList.split(",")){
+            list.add(NBTTagString.a(each));
+        }
+
+        return list;
     }
 }
