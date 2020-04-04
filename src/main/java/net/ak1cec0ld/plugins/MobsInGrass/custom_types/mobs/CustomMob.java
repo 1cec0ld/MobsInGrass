@@ -1,19 +1,16 @@
 package net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs;
 
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import net.ak1cec0ld.plugins.MobsInGrass.custom_types.MySender;
+import org.bukkit.*;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
-import net.minecraft.server.v1_15_R1.*;
 
 import java.util.*;
 
@@ -232,8 +229,9 @@ public class CustomMob {
             ((Zombie)mob).setBaby(baby);
         }
         if(tags != null) {
-            NamespacedKey TAGS = new NamespacedKey(MobsInGrass.instance(),"Tags");
-            mob.getPersistentDataContainer().set(TAGS, PersistentDataType.STRING, tags);
+            //NamespacedKey TAGS = new NamespacedKey(MobsInGrass.instance(),"Tags");
+            //mob.getPersistentDataContainer().set(TAGS, PersistentDataType.STRING, tags);
+            applyTags(tags);
         }
         recursionCounter++;
         if(recursionCounter > 5)return;
@@ -242,8 +240,7 @@ public class CustomMob {
             mob.addPassenger(each.getEntity());
         }
         recursionCounter--;
-        net.minecraft.server.v1_15_R1.Entity nmsEnt = ((CraftEntity)mob).getHandle();
-        //NBTEditor.set(mob, getNBTTaglist(tags), "Tags");
+
     }
     private void applyAttributes(Mob mob){
         if(maxHealth != FAKE_NULL && mob.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null){
@@ -298,12 +295,21 @@ public class CustomMob {
         }
     }
 
-    private NBTTagList getNBTTaglist(String commaDelimitedList){
+    private void applyTags(String commaDelimitedList){
+        Boolean x = entity.getWorld().getGameRuleValue(GameRule.SEND_COMMAND_FEEDBACK);
+        entity.getWorld().setGameRule(GameRule.SEND_COMMAND_FEEDBACK,false);
+        for(String tag : commaDelimitedList.split(",")){
+            Bukkit.dispatchCommand(new MySender(), "tag " + entity.getUniqueId() + " add " + tag);
+        }
+        entity.getWorld().setGameRule(GameRule.SEND_COMMAND_FEEDBACK,x);
+    }
+
+    /*private NBTTagList getNBTTaglist(String commaDelimitedList){
         NBTTagList list = new NBTTagList();
         for(String each : commaDelimitedList.split(",")){
             list.add(NBTTagString.a(each));
         }
 
         return list;
-    }
+    }*/
 }
