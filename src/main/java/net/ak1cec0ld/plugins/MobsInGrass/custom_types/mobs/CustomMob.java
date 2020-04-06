@@ -225,12 +225,13 @@ public class CustomMob {
         if (mob instanceof Slime){
             ((Slime)mob).setSize(size);
         }
+        if (mob instanceof Wolf){
+            ((Wolf)mob).setAngry(true);
+        }
         if (mob instanceof Zombie){
             ((Zombie)mob).setBaby(baby);
         }
         if(tags != null) {
-            //NamespacedKey TAGS = new NamespacedKey(MobsInGrass.instance(),"Tags");
-            //mob.getPersistentDataContainer().set(TAGS, PersistentDataType.STRING, tags);
             applyTags(tags);
         }
         recursionCounter++;

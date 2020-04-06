@@ -1,6 +1,5 @@
 package net.ak1cec0ld.plugins.MobsInGrass.custom_types;
 
-import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.RemoteConsoleCommandSender;
@@ -11,6 +10,11 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Set;
 
+
+/*This class exists because using Bukkit.getConsoleSender() creates a commandSender that logs vanilla commands to console
+each time; custom commandSenders don't do that, but vanilla commands only work with RemoteConsoleCommandSenders or
+ConsoleCommandSenders (the latter will cause the logging problem again)
+ */
 public class MySender implements RemoteConsoleCommandSender {
     public MySender self;
     public MySender(){
