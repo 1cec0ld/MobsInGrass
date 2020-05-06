@@ -63,9 +63,9 @@ public class CustomZone {
     }
 
     public boolean inZone(Location loc){
-        return loc.getX() >= x && loc.getX() <= x+dx &&
-               loc.getY() >= y && loc.getY() <= y+dy &&
-               loc.getZ() >= z && loc.getZ() <= z+dz;
+        return loc.getX() >= x && loc.getX() < x+dx &&
+               loc.getY() >= y && loc.getY() < y+dy &&
+               loc.getZ() >= z && loc.getZ() < z+dz;
     }
     private class Pair<T,K> {
         T one;

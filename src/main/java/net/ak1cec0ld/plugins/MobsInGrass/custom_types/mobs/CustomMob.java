@@ -3,13 +3,9 @@ package net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs;
 import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.MySender;
 import org.bukkit.*;
-import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
-import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
@@ -23,6 +19,7 @@ public class CustomMob {
     private Entity entity;
     private int amount = 1;
     private int size = 1;
+    private boolean angry = false;
     private boolean aware = true;
     private boolean baby = false;
     private boolean glowing = false;
@@ -72,6 +69,9 @@ public class CustomMob {
     }
     public void setBool(String attr, boolean in){
         switch (attr.toLowerCase()){
+            case "angry":
+                this.angry = in;
+                break;
             case "aware":
                 this.aware = in;
                 break;
@@ -226,7 +226,7 @@ public class CustomMob {
             ((Slime)mob).setSize(size);
         }
         if (mob instanceof Wolf){
-            ((Wolf)mob).setAngry(true);
+            ((Wolf)mob).setAngry(angry);
         }
         if (mob instanceof Zombie){
             ((Zombie)mob).setBaby(baby);

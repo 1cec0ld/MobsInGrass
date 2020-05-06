@@ -18,7 +18,7 @@ public class MobsManager {
 
     private static CustomYMLStorage yml;
     private static YamlConfiguration storage;
-    private static final List<String> booleans = Arrays.asList("aware","baby","glowing","gravity","invulnerable","killer","powered","silent");
+    private static final List<String> booleans = Arrays.asList("angry","aware","baby","glowing","gravity","invulnerable","killer","powered","silent");
     private static final List<String> doubles = Arrays.asList("absorption","armor","armorToughness","attackDamage","attackSpeed","flyingSpeed","knockbackResist","maxHealth","movementSpeed");
 
 
@@ -29,61 +29,6 @@ public class MobsManager {
 
         initialize();
     }
-    /*
-    mobs:
-        ID:
-            entityType: {https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Mob.html}
-        ##    amount: {int}
-        ##    size: {int}               slime/magmacube only
-        ##    absorption: {double}
-        ##    armor: {double}
-        ##    armorToughness: {double}
-        ##    attackDamage: {double}    max 2048
-        ##    attackSpeed: {double}
-        ##    flyingSpeed: {double}
-        ##    knockbackResist: {double}
-        ##    maxHealth: {double}       max 1024
-        ##    movementSpeed: {double}
-        ##    aware: {bool}
-        ##    baby: {bool}
-        ##    glowing: {bool}
-        ##    gravity: {bool}
-        ##    invulnerable: {bool}
-        ##    killer: {bool}            rabbits only
-        ##    powered: {bool}           creepers only
-        ##    silent: {bool}
-        ##    announcement: {&4string}
-        ##    tags: {string1,string2,string3,string4} Note, these will eventually determine mob powers
-        ##    passengers:
-        ##      - ID1
-        ##      - ID2...etc
-        ##      - Note, these must be defined ABOVE this point!
-        ##    in-blocks: Material,Material,Material
-        ##    on-blocks: Material,Material,Material
-        ##    items:
-        ##      mainhand:
-        ##        ==: org.bukkit.inventory.ItemStack
-        ##        type: DIAMOND_SWORD
-        ##        damage: 1500
-        ##        amount: 1
-        ##       meta:
-        ##          ==: ItemMeta
-        ##          meta-type: UNSPECIFIC
-        ##          display-name: §6Sample Item
-        ##          lore:
-        ##          - First line of lore
-        ##          - Second line of lore
-        ##          - §1Color §2support
-        ##          enchants:
-        ##            DAMAGE_ALL: 2
-        ##            KNOCKBACK: 7
-        ##            FIRE_ASPECT: 1
-        ##    potions:
-        ##      myPotionName1:
-        ##        type: regeneration
-        ##        duration: 999999
-        ##        amplifier: 1
-     */
 
     private void initialize(){
         ConfigurationSection allMobs = storage.getConfigurationSection("mobs");

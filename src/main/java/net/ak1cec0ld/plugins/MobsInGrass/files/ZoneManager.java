@@ -24,31 +24,25 @@ public class ZoneManager {
     }
     /*
     zones:
-        kanto:
-            route1:
-                x: -604
-                y: 0
-                z: 340
-                dx: 63
-                dy: 255
-                dz: 127
-                spawns:
-                    - Skeleton,20,morning,day,evening
-                    - Skeleton,30,night
+        route1:
+            x: -604
+            y: 0
+            z: 340
+            dx: 63
+            dy: 255
+            dz: 127
+            spawns:
+                - Skeleton,20,morning,day,evening
+                - Skeleton,30,night
     */
     private void initialize(){
-        ConfigurationSection allGenerations = storage.getConfigurationSection("zones");
-        for(String region : allGenerations.getKeys(false)){
-            ConfigurationSection allZones = allGenerations.getConfigurationSection(region);
-            for(String zone : allZones.getKeys(false)){
-                String id = (region+zone).toUpperCase();
-                CustomZone newZone = createCustomZone(id, allZones.getConfigurationSection(zone));
-                newZone = addSpawns(newZone, allZones.getConfigurationSection(zone));
+        ConfigurationSection allZones = storage.getConfigurationSection("zones");
+        for(String zone : allZones.getKeys(false)){
+            String id = (zone).toUpperCase();
+            CustomZone newZone = createCustomZone(id, allZones.getConfigurationSection(zone));
+            newZone = addSpawns(newZone, allZones.getConfigurationSection(zone));
 
-
-
-                ZoneProvider.register(id,newZone);
-            }
+            ZoneProvider.register(id,newZone);
         }
     }
     private CustomZone createCustomZone(String id, ConfigurationSection zoneSection){
