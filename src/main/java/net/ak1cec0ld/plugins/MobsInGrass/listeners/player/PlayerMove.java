@@ -4,6 +4,7 @@ import net.ak1cec0ld.plugins.MobsInGrass.MobsInGrass;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.mobs.CustomMob;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.CustomZone;
 import net.ak1cec0ld.plugins.MobsInGrass.custom_types.zones.ZoneProvider;
+import net.ak1cec0ld.plugins.MobsInGrass.files.ItemManager;
 import net.ak1cec0ld.plugins.MobsInGrass.files.TimeManager;
 import net.ak1cec0ld.plugins.MobsInGrass.listeners.Listeners;
 import org.bukkit.Bukkit;
@@ -23,10 +24,11 @@ import java.util.Random;
 public class PlayerMove implements Listener{
 
     private static Random r = new Random();
-    private static final int DEFAULT_CHANCE = 8;
+    private static int DEFAULT_CHANCE;
 
     public PlayerMove(){
         MobsInGrass.instance().getServer().getPluginManager().registerEvents(this, MobsInGrass.instance());
+        DEFAULT_CHANCE = ItemManager.getDefaultChance();
     }
 
     @EventHandler

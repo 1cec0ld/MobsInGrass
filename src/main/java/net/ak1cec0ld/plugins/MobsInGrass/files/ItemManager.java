@@ -25,6 +25,7 @@ public class ItemManager {
     }
 
     /*
+      default: 8
       items:
         attract:
           displayname: &2Attract
@@ -44,7 +45,9 @@ public class ItemManager {
           duration: 300
           power-multiplier: 1.3
     */
-
+    public static int getDefaultChance(){
+        return storage.getInt("default", 8);
+    }
     private void initialize(){
         ConfigurationSection items = storage.getConfigurationSection("items");
         for(String eachPotion : items.getKeys(false)){

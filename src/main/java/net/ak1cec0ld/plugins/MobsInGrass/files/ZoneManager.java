@@ -39,6 +39,7 @@ public class ZoneManager {
         ConfigurationSection allZones = storage.getConfigurationSection("zones");
         for(String zone : allZones.getKeys(false)){
             String id = (zone).toUpperCase();
+            //MobsInGrass.debug(id + " registering");
             CustomZone newZone = createCustomZone(id, allZones.getConfigurationSection(zone));
             newZone = addSpawns(newZone, allZones.getConfigurationSection(zone));
 
